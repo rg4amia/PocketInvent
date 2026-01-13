@@ -1,0 +1,194 @@
+Voici le cahier des charges pour le développement de votre application de gestion de téléphones, structuré selon vos besoins et les technologies choisies.
+
+### **1. Présentation du Projet**
+L'objectif est de créer une application mobile permettant de gérer le stock et le suivi des transactions de téléphones. L'outil doit faciliter l'enregistrement des appareils, le suivi des paiements et la recherche rapide d'informations via l'identifiant **IMEI** [1].
+
+**Plateforme prioritaire** : iOS (iPhone) – L'application sera développée en priorité pour iOS, avec une compatibilité Android possible grâce à Flutter.
+
+---
+
+### **2. Spécifications Fonctionnelles**
+
+**A. Authentification et Gestion des Utilisateurs**
+*   **Connexion sécurisée** : Authentification via Supabase Auth
+*   **Méthodes de connexion** :
+    *   Email + Mot de passe
+    *   Connexion avec Apple (Sign in with Apple) - Obligatoire pour iOS
+    *   Connexion avec Google (optionnel)
+*   **Gestion de session** : 
+    *   Maintien de la session utilisateur
+    *   Déconnexion sécurisée
+    *   Récupération de mot de passe par email
+*   **Profil utilisateur** :
+    *   Nom de l'entreprise/utilisateur
+    *   Email
+    *   Photo de profil (optionnel)
+*   **Sécurité** : 
+    *   Chaque utilisateur ne peut accéder qu'à ses propres données (Row Level Security dans Supabase)
+    *   Données isolées par utilisateur
+
+**B. Gestion des Entrées (Saisie de données)**
+*   **Enregistrement hybride** : L'utilisateur doit pouvoir ajouter un téléphone soit en prenant une **photo de l'appareil**, soit en saisissant les informations manuellement [1, 2].
+*   **Extraction automatique de l'IMEI par OCR** : 
+    *   Prise de photo de l'étiquette IMEI (sur la boîte ou dans les paramètres du téléphone)
+    *   Reconnaissance automatique du numéro IMEI via OCR
+    *   Validation du format IMEI (15 chiffres)
+    *   Possibilité de correction manuelle si l'OCR n'est pas précis
+*   **Champs obligatoires par appareil** :
+    *   **IMEI** (Identifiant unique) - Saisie manuelle ou extraction OCR [1, 3].
+    *   **Marque** et modèle [3].
+    *   **Couleur** et **capacité** [3].
+    *   **Prix** d'achat ou de vente [4].
+    *   **Nom du fournisseur** ou de la personne ayant vendu le téléphone [1].
+    *   **Date de la transaction** [1].
+
+**C. Suivi et Consultation**
+*   **Statut de paiement étendu** : Indicateur permettant de savoir si le téléphone est "Payé", "Retour", "Revendu" avec accès à l'historique complet [1].
+*   **Moteur de recherche performant** : Recherche instantanée par **nom du téléphone**, **marque**, **modèle**, **fournisseur**, **client** ou par **IMEI** [1, 5].
+*   **Affichage automatique** : Dès la saisie de l'IMEI, l'application doit faire ressortir les informations liées à l'appareil et son historique [1].
+*   **Historique des transactions** : Visualisation chronologique de toutes les opérations (achat, vente, retour) pour chaque téléphone.
+
+---
+
+### **3. Architecture Technique (Stack Logicielle)**
+
+Conformément à votre demande, l'application sera bâtie sur les technologies suivantes :
+*   **Frontend : Flutter** – Pour une interface fluide et multiplateforme, **priorité iOS (iPhone)**.
+*   **Gestion d'état : GetX** – Utilisé pour la navigation, la gestion de la mémoire et la réactivité de l'interface.
+*   **Base de données locale : Hive** – Pour le cache local et le mode hors ligne.
+*   **Base de données cloud : Supabase** – Backend-as-a-Service pour la synchronisation en temps réel, l'authentification et le stockage des données.
+*   **Authentification : Supabase Auth** – Gestion complète de l'authentification avec support de Sign in with Apple (requis pour iOS).
+*   **Stockage de fichiers : Supabase Storage** – Pour la sauvegarde et la gestion des photos des téléphones.
+*   **OCR (Reconnaissance de texte)** : 
+    *   **Google ML Kit Text Recognition** (recommandé) – Solution gratuite, performante et intégrée nativement avec Flutter
+    *   Alternative : **Tesseract OCR** via le package `flutter_tesseract_ocr`
+    *   Optimisé pour la reconnaissance de numéros IMEI (15 chiffres)
+
+---
+
+### **4. Modèle de Données (Structure Supabase)**
+
+L'application utilisera les tables suivantes dans Supabase :
+
+**A. Table `users` (Gérée par Supabase Auth)**
+*   `id` (UUID, clé primaire)
+*   `email` (TEXT)
+*   `nom_entreprise` (TEXT, optionnel)
+*   `photo_url` (TEXT, optionnel)
+*   `created_at` (TIMESTAMP)
+
+**B. Table `couleur`**
+*   `id` (UUID, clé primaire)
+*   `libelle` (TEXT) – Nom de la couleur (ex: "Noir", "Blanc")
+*   `code_couleur` (TEXT) – Code hexadécimal (ex: "#000000")
+
+**C. Table `marque`**
+*   `id` (UUID, clé primaire)
+*   `nom` (TEXT) – Nom de la marque (ex: "Apple", "Samsung")
+
+**D. Table `modele`**
+*   `id` (UUID, clé primaire)
+*   `nom` (TEXT) – Nom du modèle (ex: "iPhone 14 Pro")
+*   `marque_id` (UUID, clé étrangère vers `marque`)
+
+**E. Table `capacite`**
+*   `id` (UUID, clé primaire)
+*   `valeur` (TEXT) – Capacité de stockage (ex: "128GB", "256GB")
+
+**F. Table `fournisseur`**
+*   `id` (UUID, clé primaire)
+*   `user_id` (UUID, clé étrangère vers `users`) – Propriétaire
+*   `nom` (TEXT) – Nom du fournisseur
+*   `telephone` (TEXT, optionnel)
+*   `email` (TEXT, optionnel)
+
+**G. Table `client`**
+*   `id` (UUID, clé primaire)
+*   `user_id` (UUID, clé étrangère vers `users`) – Propriétaire
+*   `nom` (TEXT) – Nom du client
+*   `telephone` (TEXT, optionnel)
+*   `email` (TEXT, optionnel)
+
+**H. Table `statut_paiement`**
+*   `id` (UUID, clé primaire)
+*   `libelle` (TEXT) – Statut (ex: "Payé", "Retour", "Revendu")
+
+**I. Table `telephone` (Table principale)**
+*   `id` (UUID, clé primaire)
+*   `user_id` (UUID, clé étrangère vers `users`) – Propriétaire
+*   `imei` (TEXT, unique par utilisateur, obligatoire)
+*   `marque_id` (UUID, clé étrangère vers `marque`)
+*   `modele_id` (UUID, clé étrangère vers `modele`)
+*   `couleur_id` (UUID, clé étrangère vers `couleur`)
+*   `capacite_id` (UUID, clé étrangère vers `capacite`)
+*   `fournisseur_id` (UUID, clé étrangère vers `fournisseur`)
+*   `prix_achat` (DECIMAL)
+*   `prix_vente` (DECIMAL, optionnel)
+*   `statut_paiement_id` (UUID, clé étrangère vers `statut_paiement`)
+*   `date_entree` (TIMESTAMP)
+*   `photo_url` (TEXT) – URL de la photo dans Supabase Storage
+*   `created_at` (TIMESTAMP)
+*   `updated_at` (TIMESTAMP)
+
+**J. Table `historique_transaction`**
+*   `id` (UUID, clé primaire)
+*   `user_id` (UUID, clé étrangère vers `users`) – Propriétaire
+*   `telephone_id` (UUID, clé étrangère vers `telephone`)
+*   `type_transaction` (TEXT) – "Achat", "Vente", "Retour"
+*   `client_id` (UUID, clé étrangère vers `client`, optionnel)
+*   `fournisseur_id` (UUID, clé étrangère vers `fournisseur`, optionnel)
+*   `montant` (DECIMAL)
+*   `statut_paiement_id` (UUID, clé étrangère vers `statut_paiement`)
+*   `date_transaction` (TIMESTAMP)
+*   `notes` (TEXT, optionnel)
+
+**Note importante sur la sécurité** : Toutes les tables (sauf les tables de référence comme `couleur`, `marque`, etc.) incluent un champ `user_id` pour isoler les données par utilisateur. Des politiques RLS (Row Level Security) seront configurées dans Supabase pour garantir que chaque utilisateur ne peut accéder qu'à ses propres données.
+
+---
+
+### **5. Flux de Travail (Workflow)**
+
+**A. Première utilisation et Authentification**
+*   **Écran de bienvenue** avec options de connexion :
+    *   Sign in with Apple (recommandé pour iOS)
+    *   Connexion avec Email/Mot de passe
+    *   Connexion avec Google (optionnel)
+*   **Inscription** : Création de compte avec email et mot de passe
+*   **Récupération de mot de passe** : Envoi d'un lien par email
+
+**B. Ouverture de l'application (utilisateur connecté)**
+*   Vérification de la session utilisateur
+*   Chargement des données depuis **Hive** (cache local) pour un accès instantané
+*   Synchronisation automatique avec **Supabase** en arrière-plan
+*   Affichage du tableau de bord personnalisé
+
+**C. Ajout d'un produit**
+1.  **Option 1 - Avec OCR** :
+    *   Prise de photo de l'étiquette IMEI
+    *   Extraction automatique de l'IMEI par OCR
+    *   Validation et correction si nécessaire
+    *   Prise de photo du téléphone (optionnel)
+2.  **Option 2 - Saisie manuelle** :
+    *   Saisie directe de l'IMEI au clavier
+    *   Prise de photo du téléphone (optionnel)
+3.  Sélection des attributs via des listes déroulantes (marque, modèle, couleur, capacité)
+4.  Saisie du prix d'achat
+5.  Sélection du fournisseur et du statut de paiement
+6.  Upload de la photo vers **Supabase Storage**
+7.  Enregistrement dans **Supabase** avec synchronisation locale dans **Hive**
+
+**D. Consultation de l'historique**
+*   Affichage de toutes les transactions liées à un téléphone (achat initial, reventes, retours)
+*   Visualisation du statut actuel et de l'évolution des paiements
+
+**E. Recherche avancée**
+*   Recherche par **IMEI**, **marque**, **modèle**, **fournisseur** ou **client**
+*   Filtrage par **statut de paiement** (Payé, Retour, Revendu)
+*   GetX filtre la liste en temps réel pour afficher les résultats instantanément
+
+**F. Gestion des ventes**
+*   Lors de la vente d'un téléphone, création d'une entrée dans `historique_transaction`
+*   Mise à jour du statut de paiement à "Revendu"
+*   Association avec un client
+
+L'application agira comme un **assistant d'inventaire de poche** : elle transforme une simple photo ou un numéro de série en une fiche comptable et logistique complète, accessible partout grâce à la synchronisation Supabase en temps réel.

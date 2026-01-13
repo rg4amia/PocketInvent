@@ -1,0 +1,164 @@
+{
+ "designSystemProfile": {
+  "name": "Recent Documents List",
+  "platform": "iOS",
+  "overallStyle": "Clean modern iOS-native design with light color scheme, subtle shadows, rounded corners, pill-shaped segmented control, and card-style list items. Uses system fonts, standard safe areas, and directional color-coded arrows to indicate flow.",
+  "colorPalette": {
+   "primaryBlue": "#007AFF",
+   "incomingAccent": "#FF3B30",
+   "outgoingAccent": "#34C759",
+   "textPrimary": "#000000",
+   "textSecondary": "#8E8E93",
+   "textTertiary": "#AEAEB2",
+   "backgroundPrimary": "#FFFFFF",
+   "backgroundSecondary": "#F2F2F7",
+   "cardBackground": "#FFFFFF",
+   "separator": "#C6C6C8",
+   "shadow": "rgba(0,0,0,0.08)"
+  },
+  "typography": {
+   "systemFont": true,
+   "headerTitle": {
+    "size": 17,
+    "weight": "600",
+    "color": "textPrimary"
+   },
+   "tabLabelSelected": {
+    "size": 13,
+    "weight": "600",
+    "color": "#FFFFFF"
+   },
+   "tabLabelUnselected": {
+    "size": 13,
+    "weight": "600",
+    "color": "primaryBlue"
+   },
+   "itemTitle": {
+    "size": 17,
+    "weight": "600",
+    "color": "textPrimary"
+   },
+   "itemSender": {
+    "size": 15,
+    "weight": "400",
+    "color": "textSecondary"
+   },
+   "itemTime": {
+    "size": 13,
+    "weight": "400",
+    "color": "textSecondary"
+   },
+   "searchPlaceholder": {
+    "size": 15,
+    "weight": "400",
+    "color": "textTertiary"
+   }
+  },
+  "spacing": {
+   "small": 8,
+   "medium": 12,
+   "standard": 16,
+   "large": 20,
+   "section": 24
+  },
+  "cornerRadius": {
+   "card": 12,
+   "image": 8,
+   "tabPill": 20,
+   "searchBar": 10
+  },
+  "shadows": {
+   "cardElevation": {
+    "opacity": 0.08,
+    "radius": 6,
+    "offsetY": 2
+   }
+  },
+  "components": {
+   "navigationBar": {
+    "height": 44,
+    "background": "backgroundPrimary (blurred)",
+    "title": "typography.headerTitle",
+    "leftItem": "standard back chevron",
+    "rightItem": "standard ellipsis menu"
+   },
+   "searchBar": {
+    "height": 36,
+    "cornerRadius": "cornerRadius.searchBar",
+    "background": "backgroundSecondary",
+    "leftIcon": "magnifying glass",
+    "placeholder": "typography.searchPlaceholder",
+    "marginHorizontal": "spacing.standard"
+   },
+   "segmentedTabs": {
+    "type": "pill-shaped segmented control",
+    "height": 32,
+    "cornerRadius": "cornerRadius.tabPill",
+    "segments": [
+     "All",
+     "Incoming",
+     "Outgoing"
+    ],
+    "selectedBackground": "primaryBlue",
+    "unselectedBackground": "backgroundPrimary",
+    "selectedText": "tabLabelSelected",
+    "unselectedText": "tabLabelUnselected",
+    "spacingBetween": 8,
+    "horizontalPadding": "spacing.standard"
+   },
+   "listItemCard": {
+    "height": "~88",
+    "background": "cardBackground",
+    "cornerRadius": "cornerRadius.card",
+    "shadow": "cardElevation",
+    "horizontalPadding": "spacing.standard",
+    "verticalPadding": "spacing.medium",
+    "separator": true,
+    "layout": "HStack with leading image, center text stack, trailing arrow",
+    "image": {
+     "size": "64x64",
+     "cornerRadius": "cornerRadius.image",
+     "aspectFill": true,
+     "marginRight": "spacing.medium"
+    },
+    "textStack": {
+     "layout": "VStack leading",
+     "spacing": 4,
+     "title": "typography.itemTitle",
+     "sender": "typography.itemSender",
+     "time": "typography.itemTime (aligned leading, below sender)"
+    },
+    "trailingArrow": {
+     "size": 24,
+     "incoming": {
+      "direction": "down",
+      "color": "incomingAccent"
+     },
+     "outgoing": {
+      "direction": "up",
+      "color": "outgoingAccent"
+     },
+     "marginLeft": "auto"
+    }
+   },
+   "screenStructure": {
+    "safeArea": "standard iOS with Dynamic Island",
+    "order": [
+     "statusBar (light content)",
+     "navigationBar",
+     "searchBar (below nav with spacing.medium)",
+     "segmentedTabs (below search with spacing.standard)",
+     "scrollableList (fills remaining space)",
+     "bottomTabBar (optional, visible in screenshots)"
+    ]
+   }
+  },
+  "behaviorNotes": [
+   "Tabs filter content: 'All' shows mixed directions, 'Incoming' only down/red arrows, 'Outgoing' only up/green arrows.",
+   "List items are vertically scrollable with thin separators.",
+   "Arrows are color-coded and directional to visually indicate transfer flow.",
+   "Design closely follows iOS Human Interface Guidelines with custom accent colors for direction."
+  ],
+  "replicationGuidelines": "Use SwiftUI List or UICollectionView with custom cells. Apply corner radius and subtle shadow to each card. Use system fonts exclusively. Maintain consistent horizontal padding and vertical text spacing for readability. Image is square with moderate rounding. Text stack is left-aligned with small vertical gaps."
+ }
+}
