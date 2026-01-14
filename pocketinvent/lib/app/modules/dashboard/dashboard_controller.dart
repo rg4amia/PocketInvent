@@ -7,6 +7,7 @@ import '../../data/models/transaction_model.dart';
 import '../../data/services/financial_calculator.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
+import '../../data/services/notification_service.dart';
 import '../../routes/app_pages.dart';
 
 /// Controller for the financial dashboard
@@ -19,6 +20,7 @@ class DashboardController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final StorageService _storageService = Get.find<StorageService>();
   final FinancialCalculator _calculator = FinancialCalculator();
+  late final NotificationService _notificationService;
 
   // Observables
   final Rx<Period> selectedPeriod = Period.thisMonth().obs;
@@ -35,6 +37,7 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _notificationService = Get.find<NotificationService>();
     _loadSavedPeriod();
     loadData();
 
@@ -43,6 +46,16 @@ class DashboardController extends GetxController {
       calculateMetrics();
       _savePeriod();
     });
+
+    // Update badge count
+    _updateBadgeCount();
+  }
+
+  /// Update the transaction badge count
+  ///
+  /// Requirements: 5.6
+  void _updateBadgeCount() {
+    transactionBadgeCount.value = _notificationService.getNewTransactionCount();
   }
 
   /// Load the last saved period from local storage
