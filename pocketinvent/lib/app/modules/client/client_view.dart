@@ -15,7 +15,7 @@ class ClientView extends GetView<ClientController> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: controller.showAddDialog,
+            onPressed: controller.navigateToAdd,
           ),
         ],
       ),
@@ -66,7 +66,7 @@ class ClientView extends GetView<ClientController> {
                       const SizedBox(height: 8),
                       if (controller.searchQuery.value.isEmpty)
                         TextButton.icon(
-                          onPressed: controller.showAddDialog,
+                          onPressed: controller.navigateToAdd,
                           icon: const Icon(Icons.add),
                           label: const Text('Ajouter un client'),
                         ),
@@ -142,7 +142,7 @@ class ClientView extends GetView<ClientController> {
                               color: AppColors.editAccent,
                               size: 20,
                             ),
-                            onPressed: () => controller.showEditDialog(client),
+                            onPressed: () => controller.navigateToEdit(client),
                           ),
                           IconButton(
                             icon: Icon(

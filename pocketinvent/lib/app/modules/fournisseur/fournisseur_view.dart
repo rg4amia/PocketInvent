@@ -15,7 +15,7 @@ class FournisseurView extends GetView<FournisseurController> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: controller.showAddDialog,
+            onPressed: controller.navigateToAdd,
           ),
         ],
       ),
@@ -67,7 +67,7 @@ class FournisseurView extends GetView<FournisseurController> {
                       const SizedBox(height: 8),
                       if (controller.searchQuery.value.isEmpty)
                         TextButton.icon(
-                          onPressed: controller.showAddDialog,
+                          onPressed: controller.navigateToAdd,
                           icon: const Icon(Icons.add),
                           label: const Text('Ajouter un fournisseur'),
                         ),
@@ -144,7 +144,7 @@ class FournisseurView extends GetView<FournisseurController> {
                               size: 20,
                             ),
                             onPressed: () =>
-                                controller.showEditDialog(fournisseur),
+                                controller.navigateToEdit(fournisseur),
                           ),
                           IconButton(
                             icon: Icon(
