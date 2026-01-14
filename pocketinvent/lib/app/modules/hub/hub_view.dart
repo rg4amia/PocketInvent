@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'hub_controller.dart';
 import '../../core/theme/app_colors.dart';
+import '../widgets/main_nav_bar.dart';
 
 class HubView extends GetView<HubController> {
   const HubView({super.key});
@@ -159,7 +160,11 @@ class HubView extends GetView<HubController> {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavBar(),
+      bottomNavigationBar: Obx(() => MainNavBar(
+            currentIndex: controller.currentNavIndex.value,
+            onTap: controller.onNavTap,
+            transactionBadgeCount: controller.transactionBadgeCount.value,
+          )),
     );
   }
 

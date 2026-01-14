@@ -7,7 +7,8 @@ class HubController extends GetxController {
 
   final userName = ''.obs;
   final userEmail = ''.obs;
-  final currentNavIndex = 0.obs;
+  final currentNavIndex = 3.obs;
+  final transactionBadgeCount = 0.obs;
 
   @override
   void onInit() {
@@ -47,16 +48,16 @@ class HubController extends GetxController {
     currentNavIndex.value = index;
     switch (index) {
       case 0:
-        // Already on hub
+        Get.offNamed(Routes.DASHBOARD);
         break;
       case 1:
         navigateToInventory();
         break;
       case 2:
-        navigateToAddPhone();
+        Get.offNamed(Routes.TRANSACTIONS);
         break;
       case 3:
-        navigateToReferences();
+        // Already on hub
         break;
     }
   }
