@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../reference_controller.dart';
 
-class ModeleTab extends GetView<ReferenceController> {
-  const ModeleTab({super.key});
+class CouleurTab extends GetView<ReferenceController> {
+  const CouleurTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        if (controller.isLoading.value && controller.modeles.isEmpty) {
+        if (controller.isLoading.value && controller.couleurs.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (controller.modeles.isEmpty) {
+        if (controller.couleurs.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.smartphone, size: 64, color: Colors.grey[400]),
+                Icon(Icons.palette, size: 64, color: Colors.grey[400]),
                 const SizedBox(height: 16),
-                Text('Aucun modèle', style: TextStyle(color: Colors.grey[600])),
+                Text('Aucune couleur',
+                    style: TextStyle(color: Colors.grey[600])),
               ],
             ),
           );
@@ -28,24 +29,37 @@ class ModeleTab extends GetView<ReferenceController> {
 
         return ListView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: controller.modeles.length,
+          itemCount: controller.couleurs.length,
           itemBuilder: (context, index) {
-            final modele = controller.modeles[index];
+            final couleur = controller.couleurs[index];
             return Card(
               margin: const EdgeInsets.only(bottom: 8),
               child: ListTile(
-                title: Text(modele.nom),
-                subtitle: Text(modele.marqueNom ?? 'Marque inconnue'),
+                leading: couleur.codeCouleur != null
+                    ? Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: _parseColor(couleur.codeCouleur!),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey[300]!),
+                        ),
+                      )
+                    : null,
+                title: Text(couleur.libelle),
+                subtitle: couleur.codeCouleur != null
+                    ? Text(couleur.codeCouleur!)
+                    : null,
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
                       icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () => _showEditDialog(modele),
+                      onPressed: () => _showEditDialog(couleur),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => controller.deleteModele(modele.id),
+                      onPressed: () => controller.deleteCouleur(couleur.id),
                     ),
                   ],
                 ),
@@ -61,38 +75,39 @@ class ModeleTab extends GetView<ReferenceController> {
     );
   }
 
+  Color _parseColor(String hexColor) {
+    try {
+      return Color(int.parse(hexColor.replaceFirst('#', '0xFF')));
+    } catch (e) {
+      return Colors.grey;
+    }
+  }
+
   void _showAddDialog() {
     controller.textController.clear();
-    controller.selectedMarqueId.value = null;
-    
+    controller.colorCodeController.clear();
+
     Get.dialog(
       AlertDialog(
-        title: const Text('Nouveau modèle'),
+        title: const Text('Nouvelle couleur'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: controller.textController,
               decoration: const InputDecoration(
-                labelText: 'Nom du modèle',
+                labelText: 'Nom de la couleur',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            Obx(() => DropdownButtonFormField<String>(
-              value: controller.selectedMarqueId.value,
+            TextField(
+              controller: controller.colorCodeController,
               decoration: const InputDecoration(
-                labelText: 'Marque',
+                labelText: 'Code couleur (ex: #FF0000)',
                 border: OutlineInputBorder(),
               ),
-              items: controller.marques.map((marque) {
-                return DropdownMenuItem(
-                  value: marque.id,
-                  child: Text(marque.nom),
-                );
-              }).toList(),
-              onChanged: (value) => controller.selectedMarqueId.value = value,
-            )),
+            ),
           ],
         ),
         actions: [
@@ -101,7 +116,7 @@ class ModeleTab extends GetView<ReferenceController> {
             child: const Text('Annuler'),
           ),
           ElevatedButton(
-            onPressed: controller.createModele,
+            onPressed: controller.createCouleur,
             child: const Text('Créer'),
           ),
         ],
@@ -109,38 +124,31 @@ class ModeleTab extends GetView<ReferenceController> {
     );
   }
 
-  void _showEditDialog(modele) {
-    controller.textController.text = modele.nom;
-    controller.selectedMarqueId.value = modele.marqueId;
-    
+  void _showEditDialog(couleur) {
+    controller.textController.text = couleur.libelle;
+    controller.colorCodeController.text = couleur.codeCouleur ?? '';
+
     Get.dialog(
       AlertDialog(
-        title: const Text('Modifier modèle'),
+        title: const Text('Modifier couleur'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: controller.textController,
               decoration: const InputDecoration(
-                labelText: 'Nom du modèle',
+                labelText: 'Nom de la couleur',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
-            Obx(() => DropdownButtonFormField<String>(
-              value: controller.selectedMarqueId.value,
+            TextField(
+              controller: controller.colorCodeController,
               decoration: const InputDecoration(
-                labelText: 'Marque',
+                labelText: 'Code couleur (ex: #FF0000)',
                 border: OutlineInputBorder(),
               ),
-              items: controller.marques.map((marque) {
-                return DropdownMenuItem(
-                  value: marque.id,
-                  child: Text(marque.nom),
-                );
-              }).toList(),
-              onChanged: (value) => controller.selectedMarqueId.value = value,
-            )),
+            ),
           ],
         ),
         actions: [
@@ -149,7 +157,7 @@ class ModeleTab extends GetView<ReferenceController> {
             child: const Text('Annuler'),
           ),
           ElevatedButton(
-            onPressed: () => controller.updateModele(modele.id),
+            onPressed: () => controller.updateCouleur(couleur.id),
             child: const Text('Modifier'),
           ),
         ],
