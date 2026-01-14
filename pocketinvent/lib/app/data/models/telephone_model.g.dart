@@ -38,13 +38,14 @@ class TelephoneModelAdapter extends TypeAdapter<TelephoneModel> {
       photoUrl: fields[18] as String?,
       createdAt: fields[19] as DateTime,
       updatedAt: fields[20] as DateTime,
+      stockStatus: fields[21] as StockStatus,
     );
   }
 
   @override
   void write(BinaryWriter writer, TelephoneModel obj) {
     writer
-      ..writeByte(21)
+      ..writeByte(22)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -86,7 +87,9 @@ class TelephoneModelAdapter extends TypeAdapter<TelephoneModel> {
       ..writeByte(19)
       ..write(obj.createdAt)
       ..writeByte(20)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(21)
+      ..write(obj.stockStatus);
   }
 
   @override
@@ -96,6 +99,50 @@ class TelephoneModelAdapter extends TypeAdapter<TelephoneModel> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TelephoneModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class StockStatusAdapter extends TypeAdapter<StockStatus> {
+  @override
+  final int typeId = 2;
+
+  @override
+  StockStatus read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return StockStatus.enStock;
+      case 1:
+        return StockStatus.vendu;
+      case 2:
+        return StockStatus.retourne;
+      default:
+        return StockStatus.enStock;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, StockStatus obj) {
+    switch (obj) {
+      case StockStatus.enStock:
+        writer.writeByte(0);
+        break;
+      case StockStatus.vendu:
+        writer.writeByte(1);
+        break;
+      case StockStatus.retourne:
+        writer.writeByte(2);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StockStatusAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -1,0 +1,232 @@
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import '../../data/models/financial_metrics.dart';
+import '../../data/models/period.dart';
+import '../../data/models/telephone_model.dart';
+import '../../data/models/transaction_model.dart';
+import '../../data/services/financial_calculator.dart';
+import '../../data/services/supabase_service.dart';
+import '../../data/services/storage_service.dart';
+
+/// Controller for the financial dashboard
+///
+/// Manages the state and business logic for displaying financial metrics,
+/// handling period selection, and synchronizing data with Supabase.
+///
+/// Requirements: 1.1, 1.6, 9.1, 9.4, 9.5
+class DashboardController extends GetxController {
+  final SupabaseService _supabaseService = Get.find<SupabaseService>();
+  final StorageService _storageService = Get.find<StorageService>();
+  final FinancialCalculator _calculator = FinancialCalculator();
+
+  // Observables
+  final Rx<Period> selectedPeriod = Period.thisMonth().obs;
+  final Rx<FinancialMetrics?> metrics = Rx<FinancialMetrics?>(null);
+  final RxList<TransactionModel> transactions = <TransactionModel>[].obs;
+  final RxList<TelephoneModel> phones = <TelephoneModel>[].obs;
+  final RxBool isLoading = false.obs;
+  final RxBool isSyncing = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadSavedPeriod();
+    loadData();
+
+    // Recalculate metrics whenever period changes
+    ever(selectedPeriod, (_) {
+      calculateMetrics();
+      _savePeriod();
+    });
+  }
+
+  /// Load the last saved period from local storage
+  ///
+  /// Requirements: 7.5
+  void _loadSavedPeriod() {
+    try {
+      final savedPeriodJson = _storageService.getUserData('selected_period');
+      if (savedPeriodJson != null) {
+        selectedPeriod.value = Period.fromJson(savedPeriodJson);
+      }
+    } catch (e) {
+      // If loading fails, keep default period (thisMonth)
+      print('Failed to load saved period: $e');
+    }
+  }
+
+  /// Save the current period to local storage
+  ///
+  /// Requirements: 7.5
+  Future<void> _savePeriod() async {
+    try {
+      await _storageService.saveUserData(
+        'selected_period',
+        selectedPeriod.value.toJson(),
+      );
+    } catch (e) {
+      print('Failed to save period: $e');
+    }
+  }
+
+  /// Load all data (transactions and phones) from cache and Supabase
+  ///
+  /// This method:
+  /// 1. Loads cached data first for immediate display
+  /// 2. Calculates metrics from cached data
+  /// 3. Syncs with Supabase in the background
+  /// 4. Updates metrics with fresh data
+  ///
+  /// Requirements: 1.1, 9.1, 9.4, 9.5
+  Future<void> loadData() async {
+    try {
+      isLoading.value = true;
+
+      // Load from cache first (offline support)
+      await _loadCachedData();
+
+      // Calculate metrics from cached data
+      calculateMetrics();
+
+      // Sync with Supabase in background
+      await _syncWithSupabase();
+    } catch (e) {
+      Get.snackbar(
+        'Erreur',
+        'Impossible de charger les données: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Load transactions and phones from local cache
+  ///
+  /// Requirements: 9.4, 9.5
+  Future<void> _loadCachedData() async {
+    try {
+      transactions.value = _storageService.getAllTransactions();
+      phones.value = _storageService.getAllTelephones();
+    } catch (e) {
+      print('Failed to load cached data: $e');
+      transactions.value = [];
+      phones.value = [];
+    }
+  }
+
+  /// Synchronize data with Supabase
+  ///
+  /// Fetches fresh data from the server and updates the local cache.
+  /// Shows a sync indicator while syncing.
+  ///
+  /// Requirements: 9.3, 9.6, 9.7
+  Future<void> _syncWithSupabase() async {
+    try {
+      isSyncing.value = true;
+
+      // Fetch transactions from Supabase
+      final remoteTransactions = await _fetchTransactionsFromSupabase();
+      await _storageService.saveTransactions(remoteTransactions);
+      transactions.value = remoteTransactions;
+
+      // Fetch phones from Supabase
+      final remotePhones = await _supabaseService.getTelephones();
+      await _storageService.saveTelephones(remotePhones);
+      phones.value = remotePhones;
+
+      // Recalculate metrics with fresh data
+      calculateMetrics();
+    } catch (e) {
+      // If sync fails, continue with cached data
+      print('Sync failed: $e');
+      Get.snackbar(
+        'Synchronisation',
+        'Impossible de synchroniser. Affichage des données en cache.',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 2),
+      );
+    } finally {
+      isSyncing.value = false;
+    }
+  }
+
+  /// Fetch all transactions from Supabase
+  Future<List<TransactionModel>> _fetchTransactionsFromSupabase() async {
+    final userId = _supabaseService.userId;
+    if (userId == null) {
+      throw Exception('User not authenticated');
+    }
+
+    final response =
+        await _supabaseService.client.from('historique_transaction').select('''
+          *,
+          client:client_id(nom),
+          fournisseur:fournisseur_id(nom),
+          statut_paiement:statut_paiement_id(libelle)
+        ''').eq('user_id', userId).order('date_transaction', ascending: false);
+
+    return (response as List)
+        .map((json) => TransactionModel.fromJson(json))
+        .toList();
+  }
+
+  /// Calculate financial metrics for the selected period
+  ///
+  /// Uses the FinancialCalculator service to compute all metrics
+  /// and caches the result in Hive for offline access.
+  ///
+  /// Requirements: 1.6, 9.1, 9.4
+  void calculateMetrics() {
+    try {
+      final calculatedMetrics = _calculator.calculateMetrics(
+        transactions: transactions,
+        phones: phones,
+        period: selectedPeriod.value,
+      );
+
+      metrics.value = calculatedMetrics;
+
+      // Cache the calculated metrics
+      _cacheMetrics(calculatedMetrics);
+    } catch (e) {
+      print('Failed to calculate metrics: $e');
+      Get.snackbar(
+        'Erreur',
+        'Impossible de calculer les métriques: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  /// Cache the calculated metrics in Hive
+  ///
+  /// Requirements: 9.4
+  Future<void> _cacheMetrics(FinancialMetrics metrics) async {
+    try {
+      final box = await Hive.openBox<FinancialMetrics>('financial_metrics');
+      await box.put('current_metrics', metrics);
+    } catch (e) {
+      print('Failed to cache metrics: $e');
+    }
+  }
+
+  /// Change the selected period and recalculate metrics
+  ///
+  /// The metrics will be automatically recalculated due to the
+  /// `ever` listener set up in onInit.
+  ///
+  /// Requirements: 1.6, 7.2
+  void changePeriod(Period newPeriod) {
+    selectedPeriod.value = newPeriod;
+  }
+
+  /// Refresh data by reloading from Supabase
+  ///
+  /// This is typically called by pull-to-refresh gestures.
+  ///
+  /// Requirements: 9.1, 9.3
+  Future<void> refresh() async {
+    await loadData();
+  }
+}

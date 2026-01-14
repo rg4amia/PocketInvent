@@ -70,6 +70,7 @@ CREATE TABLE telephone (
     prix_achat DECIMAL(10, 2) NOT NULL,
     prix_vente DECIMAL(10, 2),
     statut_paiement_id UUID NOT NULL REFERENCES statut_paiement(id),
+    stock_status TEXT NOT NULL DEFAULT 'enStock' CHECK (stock_status IN ('enStock', 'vendu', 'retourne')),
     date_entree TIMESTAMP NOT NULL,
     photo_url TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
@@ -90,6 +91,18 @@ CREATE TABLE historique_transaction (
     date_transaction TIMESTAMP NOT NULL,
     notes TEXT
 );
+
+-- Indexes for performance optimization
+
+-- Telephone table indexes
+CREATE INDEX idx_telephone_stock_status ON telephone(stock_status);
+CREATE INDEX idx_telephone_user_status ON telephone(user_id, stock_status);
+CREATE INDEX idx_telephone_date_status ON telephone(date_entree, stock_status);
+
+-- Historique_transaction table indexes
+CREATE INDEX idx_transaction_user_date ON historique_transaction(user_id, date_transaction DESC);
+CREATE INDEX idx_transaction_phone ON historique_transaction(telephone_id);
+CREATE INDEX idx_transaction_type ON historique_transaction(type_transaction);
 
 -- Row Level Security (RLS) Policies
 

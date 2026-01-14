@@ -2,6 +2,16 @@ import 'package:hive/hive.dart';
 
 part 'telephone_model.g.dart';
 
+@HiveType(typeId: 2)
+enum StockStatus {
+  @HiveField(0)
+  enStock,
+  @HiveField(1)
+  vendu,
+  @HiveField(2)
+  retourne,
+}
+
 @HiveType(typeId: 0)
 class TelephoneModel extends HiveObject {
   @HiveField(0)
@@ -67,6 +77,9 @@ class TelephoneModel extends HiveObject {
   @HiveField(20)
   DateTime updatedAt;
 
+  @HiveField(21)
+  StockStatus stockStatus;
+
   TelephoneModel({
     required this.id,
     required this.userId,
@@ -89,7 +102,17 @@ class TelephoneModel extends HiveObject {
     this.photoUrl,
     required this.createdAt,
     required this.updatedAt,
+    this.stockStatus = StockStatus.enStock,
   });
+
+  // Calculated properties
+  double? get profit => prixVente != null ? prixVente! - prixAchat : null;
+
+  double? get marginPercentage =>
+      profit != null && prixAchat > 0 ? (profit! / prixAchat) * 100 : null;
+
+  bool get canBeSold =>
+      stockStatus == StockStatus.enStock || stockStatus == StockStatus.retourne;
 
   factory TelephoneModel.fromJson(Map<String, dynamic> json) {
     return TelephoneModel(
@@ -116,7 +139,23 @@ class TelephoneModel extends HiveObject {
       photoUrl: json['photo_url'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      stockStatus: _parseStockStatus(json['stock_status']),
     );
+  }
+
+  static StockStatus _parseStockStatus(dynamic value) {
+    if (value == null) return StockStatus.enStock;
+
+    final statusStr = value.toString().toLowerCase();
+    switch (statusStr) {
+      case 'vendu':
+        return StockStatus.vendu;
+      case 'retourne':
+        return StockStatus.retourne;
+      case 'enstock':
+      default:
+        return StockStatus.enStock;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -136,6 +175,18 @@ class TelephoneModel extends HiveObject {
       'photo_url': photoUrl,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'stock_status': _stockStatusToString(stockStatus),
     };
+  }
+
+  static String _stockStatusToString(StockStatus status) {
+    switch (status) {
+      case StockStatus.enStock:
+        return 'enStock';
+      case StockStatus.vendu:
+        return 'vendu';
+      case StockStatus.retourne:
+        return 'retourne';
+    }
   }
 }
