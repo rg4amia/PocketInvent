@@ -122,7 +122,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - **Validates: Requirements 2.6, 2.7, 2.8**
 
 - [-] 7. Créer la navigation moderne (Bottom NavBar)
-  - [ ] 7.1 Créer le widget MainNavBar
+  - [-] 7.1 Créer le widget MainNavBar
     - Définir les 4 sections (Dashboard, Inventaire, Transactions, Profil)
     - Implémenter la navigation entre sections
     - Ajouter les icônes modernes
