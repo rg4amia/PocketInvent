@@ -3,6 +3,7 @@ import '../../data/models/period.dart';
 import '../../data/models/transaction_model.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
+import '../../routes/app_pages.dart';
 
 /// Controller for the transaction list view
 ///
@@ -24,6 +25,10 @@ class TransactionController extends GetxController {
   final Rx<String?> selectedType = Rx<String?>(null);
   final Rx<Period> selectedPeriod = Period.all().obs;
   final RxString searchQuery = ''.obs;
+
+  // Navigation
+  final RxInt currentNavIndex = 2.obs;
+  final RxInt transactionBadgeCount = 0.obs;
 
   @override
   void onInit() {
@@ -240,5 +245,28 @@ class TransactionController extends GetxController {
         allTransactions.map((t) => t.typeTransaction).toSet().toList();
     types.sort();
     return types;
+  }
+
+  /// Handle navigation bar tap
+  ///
+  /// Requirements: 5.3, 5.4
+  void onNavTap(int index) {
+    if (index == currentNavIndex.value) return;
+
+    currentNavIndex.value = index;
+    switch (index) {
+      case 0:
+        Get.offNamed(Routes.DASHBOARD);
+        break;
+      case 1:
+        Get.offNamed(Routes.HOME);
+        break;
+      case 2:
+        // Already on transactions
+        break;
+      case 3:
+        Get.offNamed(Routes.HUB);
+        break;
+    }
   }
 }
