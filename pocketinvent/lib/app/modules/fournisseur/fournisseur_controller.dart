@@ -1,14 +1,19 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../data/models/fournisseur.dart';
 import '../../data/services/fournisseur_service.dart';
 
 class FournisseurController extends GetxController {
   final FournisseurService _service = Get.find<FournisseurService>();
+  final ImagePicker _picker = ImagePicker();
 
   final fournisseurs = <Fournisseur>[].obs;
   final isLoading = false.obs;
   final searchQuery = ''.obs;
+  final selectedIdPhoto = Rx<File?>(null);
+  final idPhotoUrl = RxnString();
 
   final nomController = TextEditingController();
   final telephoneController = TextEditingController();
@@ -65,6 +70,12 @@ class FournisseurController extends GetxController {
 
     try {
       isLoading.value = true;
+
+      String? photoUrl;
+      if (selectedIdPhoto.value != null) {
+        photoUrl = await _service.uploadIdPhoto(selectedIdPhoto.value!);
+      }
+
       await _service.createFournisseur(
         nom: nomController.text.trim(),
         telephone: telephoneController.text.trim().isEmpty
@@ -73,6 +84,7 @@ class FournisseurController extends GetxController {
         email: emailController.text.trim().isEmpty
             ? null
             : emailController.text.trim(),
+        photoIdentiteUrl: photoUrl,
       );
 
       Get.back();
@@ -94,6 +106,15 @@ class FournisseurController extends GetxController {
 
     try {
       isLoading.value = true;
+
+      String? photoUrl = idPhotoUrl.value;
+      if (selectedIdPhoto.value != null) {
+        if (photoUrl != null) {
+          await _service.deleteIdPhoto(photoUrl);
+        }
+        photoUrl = await _service.uploadIdPhoto(selectedIdPhoto.value!);
+      }
+
       await _service.updateFournisseur(
         id: id,
         nom: nomController.text.trim(),
@@ -103,6 +124,7 @@ class FournisseurController extends GetxController {
         email: emailController.text.trim().isEmpty
             ? null
             : emailController.text.trim(),
+        photoIdentiteUrl: photoUrl,
       );
 
       Get.back();
@@ -209,6 +231,8 @@ class FournisseurController extends GetxController {
     nomController.text = fournisseur.nom;
     telephoneController.text = fournisseur.telephone ?? '';
     emailController.text = fournisseur.email ?? '';
+    idPhotoUrl.value = fournisseur.photoIdentiteUrl;
+    selectedIdPhoto.value = null;
 
     Get.dialog(
       AlertDialog(
@@ -271,5 +295,46 @@ class FournisseurController extends GetxController {
     nomController.clear();
     telephoneController.clear();
     emailController.clear();
+    selectedIdPhoto.value = null;
+    idPhotoUrl.value = null;
+  }
+
+  Future<void> pickIdPhoto() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        selectedIdPhoto.value = File(image.path);
+      }
+    } catch (e) {
+      Get.snackbar('Erreur', 'Impossible de sélectionner l\'image');
+    }
+  }
+
+  Future<void> takeIdPhoto() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        selectedIdPhoto.value = File(image.path);
+      }
+    } catch (e) {
+      Get.snackbar('Erreur', 'Impossible de prendre la photo');
+    }
+  }
+
+  void removeIdPhoto() {
+    selectedIdPhoto.value = null;
+    idPhotoUrl.value = null;
   }
 }
