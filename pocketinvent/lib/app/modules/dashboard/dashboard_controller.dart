@@ -7,6 +7,7 @@ import '../../data/models/transaction_model.dart';
 import '../../data/services/financial_calculator.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
+import '../../routes/app_pages.dart';
 
 /// Controller for the financial dashboard
 ///
@@ -26,6 +27,10 @@ class DashboardController extends GetxController {
   final RxList<TelephoneModel> phones = <TelephoneModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxBool isSyncing = false.obs;
+
+  // Navigation
+  final RxInt currentNavIndex = 0.obs;
+  final RxInt transactionBadgeCount = 0.obs;
 
   @override
   void onInit() {
@@ -228,5 +233,28 @@ class DashboardController extends GetxController {
   /// Requirements: 9.1, 9.3
   Future<void> refresh() async {
     await loadData();
+  }
+
+  /// Handle navigation bar tap
+  ///
+  /// Requirements: 5.3, 5.4
+  void onNavTap(int index) {
+    if (index == currentNavIndex.value) return;
+
+    currentNavIndex.value = index;
+    switch (index) {
+      case 0:
+        // Already on dashboard
+        break;
+      case 1:
+        Get.offNamed(Routes.HOME);
+        break;
+      case 2:
+        Get.offNamed(Routes.TRANSACTIONS);
+        break;
+      case 3:
+        Get.offNamed(Routes.HUB);
+        break;
+    }
   }
 }
