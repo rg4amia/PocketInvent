@@ -21,14 +21,14 @@ dependencies:
   supabase_flutter: ^2.5.0
 
   # OCR & Image
-  google_mlkit_text_recognition: ^0.11.0
+  google_mlkit_text_recognition: ^0.15.0
   image_picker: ^1.0.7
 
   # Apple Sign In
-  sign_in_with_apple: ^5.0.0
+  sign_in_with_apple: ^7.0.1
 
   # Google Sign In
-  google_sign_in: ^6.2.1
+  google_sign_in: ^7.2.0
 
   # UI & Utils
   cupertino_icons: ^1.0.6
