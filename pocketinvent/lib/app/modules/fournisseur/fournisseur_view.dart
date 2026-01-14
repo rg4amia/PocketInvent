@@ -9,6 +9,7 @@ class FournisseurView extends GetView<FournisseurController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundPrimary,
       appBar: AppBar(
         title: const Text('Fournisseurs'),
         actions: [
@@ -21,17 +22,20 @@ class FournisseurView extends GetView<FournisseurController> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: TextField(
               onChanged: (value) => controller.searchQuery.value = value,
+              style: const TextStyle(fontSize: 15),
               decoration: InputDecoration(
                 hintText: 'Rechercher...',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search, size: 20),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: AppColors.cardBackground,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
             ),
           ),
@@ -73,43 +77,81 @@ class FournisseurView extends GetView<FournisseurController> {
               }
 
               return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: fournisseurs.length,
                 itemBuilder: (context, index) {
                   final fournisseur = fournisseurs[index];
-                  return Card(
+                  return Container(
                     margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundPrimary,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.border, width: 1),
+                    ),
                     child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       leading: CircleAvatar(
                         backgroundColor: AppColors.primaryBlue,
+                        radius: 24,
                         child: Text(
                           fournisseur.nom[0].toUpperCase(),
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       title: Text(
                         fournisseur.nom,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppColors.textPrimary,
+                          letterSpacing: -0.3,
+                        ),
                       ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const SizedBox(height: 4),
                           if (fournisseur.telephone != null)
-                            Text('📞 ${fournisseur.telephone}'),
+                            Text(
+                              '📞 ${fournisseur.telephone}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
                           if (fournisseur.email != null)
-                            Text('✉️ ${fournisseur.email}'),
+                            Text(
+                              '✉️ ${fournisseur.email}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
                         ],
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            icon: Icon(
+                              Icons.edit_outlined,
+                              color: AppColors.editAccent,
+                              size: 20,
+                            ),
                             onPressed: () =>
                                 controller.showEditDialog(fournisseur),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
+                            icon: Icon(
+                              Icons.delete_outline,
+                              color: AppColors.deleteAccent,
+                              size: 20,
+                            ),
                             onPressed: () =>
                                 controller.deleteFournisseur(fournisseur.id),
                           ),
