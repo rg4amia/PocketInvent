@@ -22,13 +22,14 @@ class FournisseurAdapter extends TypeAdapter<Fournisseur> {
       nom: fields[2] as String,
       telephone: fields[3] as String?,
       email: fields[4] as String?,
+      photoIdentiteUrl: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Fournisseur obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class FournisseurAdapter extends TypeAdapter<Fournisseur> {
       ..writeByte(3)
       ..write(obj.telephone)
       ..writeByte(4)
-      ..write(obj.email);
+      ..write(obj.email)
+      ..writeByte(5)
+      ..write(obj.photoIdentiteUrl);
   }
 
   @override
