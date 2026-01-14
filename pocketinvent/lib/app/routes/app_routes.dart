@@ -9,7 +9,9 @@ abstract class Routes {
   static const ADD_PHONE = _Paths.ADD_PHONE;
   static const PHONE_DETAIL = _Paths.PHONE_DETAIL;
   static const FOURNISSEUR = _Paths.FOURNISSEUR;
+  static const ADD_FOURNISSEUR = _Paths.ADD_FOURNISSEUR;
   static const CLIENT = _Paths.CLIENT;
+  static const ADD_CLIENT = _Paths.ADD_CLIENT;
   static const REFERENCE = _Paths.REFERENCE;
 }
 
@@ -22,6 +24,8 @@ abstract class _Paths {
   static const ADD_PHONE = '/add-phone';
   static const PHONE_DETAIL = '/phone-detail';
   static const FOURNISSEUR = '/fournisseur';
+  static const ADD_FOURNISSEUR = '/add-fournisseur';
   static const CLIENT = '/client';
+  static const ADD_CLIENT = '/add-client';
   static const REFERENCE = '/reference';
 }
