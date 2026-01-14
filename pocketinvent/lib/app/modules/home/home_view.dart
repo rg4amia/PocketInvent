@@ -14,6 +14,10 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: AppColors.backgroundPrimary,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Get.back(),
+        ),
         title: Text('Inventaire'),
         actions: [
           IconButton(

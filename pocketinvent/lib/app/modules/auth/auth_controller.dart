@@ -32,7 +32,7 @@ class AuthController extends GetxController {
         emailController.text.trim(),
         passwordController.text,
       );
-      Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(Routes.HUB);
     } catch (e) {
       Get.snackbar(
         'Erreur',
@@ -80,7 +80,7 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
       await _supabaseService.signInWithApple();
-      Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(Routes.HUB);
     } catch (e) {
       Get.snackbar(
         'Erreur',
@@ -98,7 +98,7 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
       await _supabaseService.signInWithGoogle();
-      Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(Routes.HUB);
     } catch (e) {
       Get.snackbar(
         'Erreur',

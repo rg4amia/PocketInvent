@@ -3,6 +3,8 @@ import '../modules/splash/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
 import '../modules/auth/auth_binding.dart';
 import '../modules/auth/auth_view.dart';
+import '../modules/hub/hub_binding.dart';
+import '../modules/hub/hub_view.dart';
 import '../modules/home/home_binding.dart';
 import '../modules/home/home_view.dart';
 import '../modules/phone/add_phone_binding.dart';
@@ -33,6 +35,11 @@ class AppPages {
       name: _Paths.AUTH,
       page: () => const AuthView(),
       binding: AuthBinding(),
+    ),
+    GetPage(
+      name: _Paths.HUB,
+      page: () => const HubView(),
+      binding: HubBinding(),
     ),
     GetPage(
       name: _Paths.HOME,

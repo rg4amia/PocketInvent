@@ -4,6 +4,58 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 
 ---
 
+## [1.1.0] - 2026-01-14
+
+### ✨ Ajouté
+
+#### Hub - Menu Principal
+- Page d'accueil centrale (hub) servant de menu principal
+- Navigation centralisée vers toutes les fonctionnalités
+- Design moderne avec gradient bleu en en-tête
+- 5 cards organisées par catégorie:
+  - **Inventaire**: Téléphones et Ajout rapide
+  - **Contacts**: Fournisseurs et Clients
+  - **Configuration**: Données de référence
+- Bouton de déconnexion avec confirmation
+- Affichage du nom de l'utilisateur
+- Message de bienvenue personnalisé
+- Icônes colorées par catégorie
+- Cards avec ombres subtiles
+- Animations smooth
+
+#### Navigation
+- Nouvelle route `/hub`
+- Hub comme point d'entrée après connexion
+- Bouton retour dans l'inventaire vers le hub
+
+### 🔧 Modifié
+
+#### Routes
+- Splash → Hub (au lieu de Home)
+- Auth → Hub (au lieu de Home)
+- Home renommé en "Inventaire" dans l'AppBar
+
+#### Fichiers Modifiés
+- `app_pages.dart` - Ajout de la route Hub
+- `app_routes.dart` - Ajout de la constante HUB
+- `splash_controller.dart` - Navigation vers Hub
+- `auth_controller.dart` - Navigation vers Hub (3 méthodes)
+- `home_view.dart` - Ajout du bouton retour
+
+### 📊 Statistiques
+
+#### Fichiers
+- **3 nouveaux fichiers** créés (hub)
+- **5 fichiers** modifiés (routes et navigation)
+- **1 fichier** de documentation ajouté
+
+#### Code
+- **~350 lignes** de code Dart ajoutées
+- **1 module** UI créé
+- **1 route** ajoutée
+
+---
+
 ## [1.0.0] - 2026-01-14
 
 ### ✨ Ajouté

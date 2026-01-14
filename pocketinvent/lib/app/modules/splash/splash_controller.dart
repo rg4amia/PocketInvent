@@ -32,8 +32,8 @@ class SplashController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 300));
 
       if (user != null) {
-        print('[SPLASH] Navigating to HOME');
-        Get.offAllNamed(Routes.HOME);
+        print('[SPLASH] Navigating to HUB');
+        Get.offAllNamed(Routes.HUB);
       } else {
         print('[SPLASH] Navigating to AUTH');
         Get.offAllNamed(Routes.AUTH);
