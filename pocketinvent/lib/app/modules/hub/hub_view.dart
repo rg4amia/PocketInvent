@@ -438,49 +438,47 @@ class HubView extends GetView<HubController> {
 
   Widget _buildBottomNavBar() {
     return Obx(() => Container(
+          height: 70,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.backgroundPrimary,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 20,
-                offset: Offset(0, -5),
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: Offset(0, -2),
               ),
             ],
           ),
           child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildNavItem(
-                    icon: Icons.home_rounded,
-                    label: 'Accueil',
-                    index: 0,
-                    isSelected: controller.currentNavIndex.value == 0,
-                  ),
-                  _buildNavItem(
-                    icon: Icons.inventory_2_rounded,
-                    label: 'Stock',
-                    index: 1,
-                    isSelected: controller.currentNavIndex.value == 1,
-                  ),
-                  _buildNavItem(
-                    icon: Icons.add_circle,
-                    label: 'Ajouter',
-                    index: 2,
-                    isSelected: controller.currentNavIndex.value == 2,
-                    isCenter: true,
-                  ),
-                  _buildNavItem(
-                    icon: Icons.settings_rounded,
-                    label: 'Config',
-                    index: 3,
-                    isSelected: controller.currentNavIndex.value == 3,
-                  ),
-                ],
-              ),
+            top: false,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(
+                  icon: Icons.home_rounded,
+                  label: 'Accueil',
+                  index: 0,
+                  isSelected: controller.currentNavIndex.value == 0,
+                ),
+                _buildNavItem(
+                  icon: Icons.inventory_2_rounded,
+                  label: 'Stock',
+                  index: 1,
+                  isSelected: controller.currentNavIndex.value == 1,
+                ),
+                _buildNavItem(
+                  icon: Icons.add_circle_outlined,
+                  label: 'Ajouter',
+                  index: 2,
+                  isSelected: controller.currentNavIndex.value == 2,
+                ),
+                _buildNavItem(
+                  icon: Icons.settings_rounded,
+                  label: 'Config',
+                  index: 3,
+                  isSelected: controller.currentNavIndex.value == 3,
+                ),
+              ],
             ),
           ),
         ));
@@ -491,40 +489,23 @@ class HubView extends GetView<HubController> {
     required String label,
     required int index,
     required bool isSelected,
-    bool isCenter = false,
   }) {
-    final color = isSelected ? AppColors.primaryBlue : Colors.grey[400]!;
+    final color =
+        isSelected ? AppColors.primaryBlue : AppColors.textPlaceholder;
 
     return GestureDetector(
       onTap: () => controller.onNavTap(index),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: isCenter && isSelected
-            ? BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.primaryBlue,
-                    AppColors.primaryBlue.withValues(alpha: 0.8),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primaryBlue.withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              )
-            : null,
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
-              color: isCenter && isSelected ? Colors.white : color,
-              size: isCenter ? 28 : 24,
+              color: color,
+              size: 24,
             ),
             SizedBox(height: 4),
             Text(
@@ -532,7 +513,8 @@ class HubView extends GetView<HubController> {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                color: isCenter && isSelected ? Colors.white : color,
+                color: color,
+                height: 1.2,
               ),
             ),
           ],
