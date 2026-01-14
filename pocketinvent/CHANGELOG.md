@@ -4,6 +4,27 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 
 ---
 
+## [1.1.1] - 2026-01-14
+
+### 🐛 Corrigé
+
+#### Formulaire d'Ajout de Téléphone
+- Correction du chargement des données de référence
+- Remplacement des anciennes méthodes `SupabaseService` par les nouveaux services
+- Utilisation de `ReferenceService` pour marques, modèles, couleurs, capacités, statuts
+- Utilisation de `FournisseurService` pour les fournisseurs
+- Remplacement des `Map<String, dynamic>` par des modèles typés
+- Ajout de logs de débogage pour faciliter le diagnostic
+- Amélioration de la gestion d'erreurs
+
+### 🔧 Modifié
+
+#### Fichiers Modifiés
+- `add_phone_controller.dart` - Utilisation des nouveaux services et modèles typés
+- `add_phone_view.dart` - Mise à jour des dropdowns avec les nouveaux types
+
+---
+
 ## [1.1.0] - 2026-01-14
 
 ### ✨ Ajouté

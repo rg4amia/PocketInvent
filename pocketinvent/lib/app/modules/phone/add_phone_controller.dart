@@ -4,11 +4,23 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/ocr_service.dart';
+import '../../data/services/fournisseur_service.dart';
+import '../../data/services/reference_service.dart';
+import '../../data/models/marque.dart';
+import '../../data/models/modele.dart';
+import '../../data/models/couleur.dart';
+import '../../data/models/capacite.dart';
+import '../../data/models/statut_paiement.dart';
+import '../../data/models/fournisseur.dart';
 
 class AddPhoneController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final OcrService _ocrService = Get.put(OcrService());
   final ImagePicker _imagePicker = ImagePicker();
+
+  // Nouveaux services
+  late final FournisseurService _fournisseurService;
+  late final ReferenceService _referenceService;
 
   final imeiController = TextEditingController();
   final prixAchatController = TextEditingController();
@@ -17,24 +29,39 @@ class AddPhoneController extends GetxController {
   final isOcrProcessing = false.obs;
   final phoneImage = Rx<File?>(null);
 
-  final marques = <Map<String, dynamic>>[].obs;
-  final modeles = <Map<String, dynamic>>[].obs;
-  final couleurs = <Map<String, dynamic>>[].obs;
-  final capacites = <Map<String, dynamic>>[].obs;
-  final fournisseurs = <Map<String, dynamic>>[].obs;
-  final statutsPaiement = <Map<String, dynamic>>[].obs;
+  final marques = <Marque>[].obs;
+  final modeles = <Modele>[].obs;
+  final couleurs = <Couleur>[].obs;
+  final capacites = <Capacite>[].obs;
+  final fournisseurs = <Fournisseur>[].obs;
+  final statutsPaiement = <StatutPaiement>[].obs;
 
-  final selectedMarque = Rx<Map<String, dynamic>?>(null);
-  final selectedModele = Rx<Map<String, dynamic>?>(null);
-  final selectedCouleur = Rx<Map<String, dynamic>?>(null);
-  final selectedCapacite = Rx<Map<String, dynamic>?>(null);
-  final selectedFournisseur = Rx<Map<String, dynamic>?>(null);
-  final selectedStatutPaiement = Rx<Map<String, dynamic>?>(null);
+  final selectedMarque = Rx<Marque?>(null);
+  final selectedModele = Rx<Modele?>(null);
+  final selectedCouleur = Rx<Couleur?>(null);
+  final selectedCapacite = Rx<Capacite?>(null);
+  final selectedFournisseur = Rx<Fournisseur?>(null);
+  final selectedStatutPaiement = Rx<StatutPaiement?>(null);
 
   @override
   void onInit() {
     super.onInit();
+    _initServices();
     loadReferenceData();
+  }
+
+  void _initServices() {
+    try {
+      _fournisseurService = Get.find<FournisseurService>();
+    } catch (e) {
+      _fournisseurService = Get.put(FournisseurService());
+    }
+
+    try {
+      _referenceService = Get.find<ReferenceService>();
+    } catch (e) {
+      _referenceService = Get.put(ReferenceService());
+    }
   }
 
   Future<void> loadReferenceData() async {
@@ -42,36 +69,44 @@ class AddPhoneController extends GetxController {
       isLoading.value = true;
 
       final results = await Future.wait([
-        _supabaseService.getMarques(),
-        _supabaseService.getCouleurs(),
-        _supabaseService.getCapacites(),
-        _supabaseService.getFournisseurs(),
-        _supabaseService.getStatutsPaiement(),
+        _referenceService.getMarques(),
+        _referenceService.getCouleurs(),
+        _referenceService.getCapacites(),
+        _fournisseurService.getFournisseurs(),
+        _referenceService.getStatutsPaiement(),
       ]);
 
-      marques.value = results[0];
-      couleurs.value = results[1];
-      capacites.value = results[2];
-      fournisseurs.value = results[3];
-      statutsPaiement.value = results[4];
+      marques.value = results[0] as List<Marque>;
+      couleurs.value = results[1] as List<Couleur>;
+      capacites.value = results[2] as List<Capacite>;
+      fournisseurs.value = results[3] as List<Fournisseur>;
+      statutsPaiement.value = results[4] as List<StatutPaiement>;
+
+      print(
+          '[AddPhone] Loaded: ${marques.length} marques, ${couleurs.length} couleurs, ${capacites.length} capacites, ${fournisseurs.length} fournisseurs, ${statutsPaiement.length} statuts');
     } catch (e) {
+      print('[AddPhone] Error loading data: $e');
       Get.snackbar(
         'Erreur',
         'Impossible de charger les données: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> onMarqueChanged(Map<String, dynamic>? marque) async {
+  Future<void> onMarqueChanged(Marque? marque) async {
     selectedMarque.value = marque;
     selectedModele.value = null;
 
     if (marque != null) {
       try {
-        modeles.value = await _supabaseService.getModeles(marque['id']);
+        modeles.value = await _referenceService.getModeles(marqueId: marque.id);
+        print(
+            '[AddPhone] Loaded ${modeles.length} modeles for marque ${marque.nom}');
       } catch (e) {
+        print('[AddPhone] Error loading modeles: $e');
         Get.snackbar('Erreur', 'Impossible de charger les modèles');
       }
     } else {
@@ -185,13 +220,13 @@ class AddPhoneController extends GetxController {
       // Create telephone data
       final data = {
         'imei': imeiController.text.trim(),
-        'marque_id': selectedMarque.value!['id'],
-        'modele_id': selectedModele.value!['id'],
-        'couleur_id': selectedCouleur.value!['id'],
-        'capacite_id': selectedCapacite.value!['id'],
-        'fournisseur_id': selectedFournisseur.value?['id'],
+        'marque_id': selectedMarque.value!.id,
+        'modele_id': selectedModele.value!.id,
+        'couleur_id': selectedCouleur.value!.id,
+        'capacite_id': selectedCapacite.value!.id,
+        'fournisseur_id': selectedFournisseur.value?.id,
         'prix_achat': double.parse(prixAchatController.text),
-        'statut_paiement_id': selectedStatutPaiement.value!['id'],
+        'statut_paiement_id': selectedStatutPaiement.value!.id,
         'date_entree': DateTime.now().toIso8601String(),
         'photo_url': photoUrl,
       };

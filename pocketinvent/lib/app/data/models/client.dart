@@ -19,12 +19,16 @@ class Client extends HiveObject {
   @HiveField(4)
   String? email;
 
+  @HiveField(5)
+  String? photoIdentiteUrl;
+
   Client({
     required this.id,
     required this.userId,
     required this.nom,
     this.telephone,
     this.email,
+    this.photoIdentiteUrl,
   });
 
   factory Client.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,7 @@ class Client extends HiveObject {
       nom: json['nom'] as String,
       telephone: json['telephone'] as String?,
       email: json['email'] as String?,
+      photoIdentiteUrl: json['photo_identite_url'] as String?,
     );
   }
 
@@ -44,6 +49,7 @@ class Client extends HiveObject {
       'nom': nom,
       'telephone': telephone,
       'email': email,
+      'photo_identite_url': photoIdentiteUrl,
     };
   }
 
@@ -52,6 +58,7 @@ class Client extends HiveObject {
       'nom': nom,
       'telephone': telephone,
       'email': email,
+      'photo_identite_url': photoIdentiteUrl,
     };
   }
 }

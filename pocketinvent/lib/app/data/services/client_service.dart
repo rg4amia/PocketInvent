@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/client.dart';
@@ -46,6 +47,7 @@ class ClientService extends GetxService {
     required String nom,
     String? telephone,
     String? email,
+    String? photoIdentiteUrl,
   }) async {
     try {
       if (_userId == null) throw Exception('User not authenticated');
@@ -57,6 +59,7 @@ class ClientService extends GetxService {
             'nom': nom,
             'telephone': telephone,
             'email': email,
+            'photo_identite_url': photoIdentiteUrl,
           })
           .select()
           .single();
@@ -73,6 +76,7 @@ class ClientService extends GetxService {
     required String nom,
     String? telephone,
     String? email,
+    String? photoIdentiteUrl,
   }) async {
     try {
       if (_userId == null) throw Exception('User not authenticated');
@@ -83,6 +87,7 @@ class ClientService extends GetxService {
             'nom': nom,
             'telephone': telephone,
             'email': email,
+            'photo_identite_url': photoIdentiteUrl,
           })
           .eq('id', id)
           .eq('user_id', _userId!);
@@ -123,5 +128,34 @@ class ClientService extends GetxService {
       print('[ClientService] Error searching clients: $e');
       rethrow;
     }
+  }
+}
+
+Future<String> uploadIdPhoto(File file) async {
+  try {
+    if (_userId == null) throw Exception('User not authenticated');
+
+    final fileName = '${_userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final path = '$_userId/$fileName';
+
+    await _supabase.storage.from('id-photos').upload(path, file);
+
+    final url = _supabase.storage.from('id-photos').getPublicUrl(path);
+    return url;
+  } catch (e) {
+    print('[ClientService] Error uploading ID photo: $e');
+    rethrow;
+  }
+}
+
+Future<void> deleteIdPhoto(String url) async {
+  try {
+    if (_userId == null) throw Exception('User not authenticated');
+
+    final path = url.split('/id-photos/').last;
+    await _supabase.storage.from('id-photos').remove([path]);
+  } catch (e) {
+    print('[ClientService] Error deleting ID photo: $e');
+    rethrow;
   }
 }

@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'add_phone_controller.dart';
 import '../../core/theme/app_colors.dart';
+import '../../data/models/marque.dart';
+import '../../data/models/modele.dart';
+import '../../data/models/couleur.dart';
+import '../../data/models/capacite.dart';
+import '../../data/models/statut_paiement.dart';
+import '../../data/models/fournisseur.dart';
 
 class AddPhoneView extends GetView<AddPhoneController> {
   const AddPhoneView({super.key});
@@ -199,7 +205,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
           _buildLabel('Marque *'),
           const SizedBox(height: 6),
           Obx(
-            () => DropdownButtonFormField<Map<String, dynamic>>(
+            () => DropdownButtonFormField<Marque>(
               value: controller.selectedMarque.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner une marque',
@@ -209,7 +215,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
               items: controller.marques.map((marque) {
                 return DropdownMenuItem(
                   value: marque,
-                  child: Text(marque['nom'], style: TextStyle(fontSize: 15)),
+                  child: Text(marque.nom, style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: controller.onMarqueChanged,
@@ -221,7 +227,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
           _buildLabel('Modèle *'),
           const SizedBox(height: 6),
           Obx(
-            () => DropdownButtonFormField<Map<String, dynamic>>(
+            () => DropdownButtonFormField<Modele>(
               value: controller.selectedModele.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner un modèle',
@@ -231,7 +237,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
               items: controller.modeles.map((modele) {
                 return DropdownMenuItem(
                   value: modele,
-                  child: Text(modele['nom'], style: TextStyle(fontSize: 15)),
+                  child: Text(modele.nom, style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: (value) => controller.selectedModele.value = value,
@@ -243,7 +249,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
           _buildLabel('Couleur *'),
           const SizedBox(height: 6),
           Obx(
-            () => DropdownButtonFormField<Map<String, dynamic>>(
+            () => DropdownButtonFormField<Couleur>(
               value: controller.selectedCouleur.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner une couleur',
@@ -253,8 +259,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
               items: controller.couleurs.map((couleur) {
                 return DropdownMenuItem(
                   value: couleur,
-                  child:
-                      Text(couleur['libelle'], style: TextStyle(fontSize: 15)),
+                  child: Text(couleur.libelle, style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: (value) => controller.selectedCouleur.value = value,
@@ -266,7 +271,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
           _buildLabel('Capacité *'),
           const SizedBox(height: 6),
           Obx(
-            () => DropdownButtonFormField<Map<String, dynamic>>(
+            () => DropdownButtonFormField<Capacite>(
               value: controller.selectedCapacite.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner une capacité',
@@ -276,8 +281,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
               items: controller.capacites.map((capacite) {
                 return DropdownMenuItem(
                   value: capacite,
-                  child:
-                      Text(capacite['valeur'], style: TextStyle(fontSize: 15)),
+                  child: Text(capacite.valeur, style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: (value) => controller.selectedCapacite.value = value,
@@ -308,7 +312,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
           _buildLabel('Fournisseur'),
           const SizedBox(height: 6),
           Obx(
-            () => DropdownButtonFormField<Map<String, dynamic>>(
+            () => DropdownButtonFormField<Fournisseur>(
               value: controller.selectedFournisseur.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner un fournisseur',
@@ -318,8 +322,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
               items: controller.fournisseurs.map((fournisseur) {
                 return DropdownMenuItem(
                   value: fournisseur,
-                  child:
-                      Text(fournisseur['nom'], style: TextStyle(fontSize: 15)),
+                  child: Text(fournisseur.nom, style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: (value) =>
@@ -332,7 +335,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
           _buildLabel('Statut de paiement *'),
           const SizedBox(height: 6),
           Obx(
-            () => DropdownButtonFormField<Map<String, dynamic>>(
+            () => DropdownButtonFormField<StatutPaiement>(
               value: controller.selectedStatutPaiement.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner un statut',
@@ -342,8 +345,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
               items: controller.statutsPaiement.map((statut) {
                 return DropdownMenuItem(
                   value: statut,
-                  child:
-                      Text(statut['libelle'], style: TextStyle(fontSize: 15)),
+                  child: Text(statut.libelle, style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: (value) =>

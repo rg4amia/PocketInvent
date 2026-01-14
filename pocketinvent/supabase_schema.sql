@@ -33,7 +33,10 @@ CREATE TABLE fournisseur (
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     nom TEXT NOT NULL,
     telephone TEXT,
-    email TEXT
+    email TEXT,
+    photo_identite_url TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Table: client
@@ -42,7 +45,10 @@ CREATE TABLE client (
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     nom TEXT NOT NULL,
     telephone TEXT,
-    email TEXT
+    email TEXT,
+    photo_identite_url TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Table: statut_paiement
@@ -219,12 +225,25 @@ SELECT 'Galaxy Z Flip 5', id FROM marque WHERE nom = 'Samsung';
 -- Storage bucket for phone photos
 INSERT INTO storage.buckets (id, name, public) VALUES ('phone-photos', 'phone-photos', true);
 
--- Storage policy
-CREATE POLICY "Users can upload their own photos" ON storage.objects
+-- Storage bucket for ID photos
+INSERT INTO storage.buckets (id, name, public) VALUES ('id-photos', 'id-photos', true);
+
+-- Storage policies for phone photos
+CREATE POLICY "Users can upload their own phone photos" ON storage.objects
     FOR INSERT WITH CHECK (bucket_id = 'phone-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
 
-CREATE POLICY "Anyone can view photos" ON storage.objects
+CREATE POLICY "Anyone can view phone photos" ON storage.objects
     FOR SELECT USING (bucket_id = 'phone-photos');
 
-CREATE POLICY "Users can delete their own photos" ON storage.objects
+CREATE POLICY "Users can delete their own phone photos" ON storage.objects
     FOR DELETE USING (bucket_id = 'phone-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
+
+-- Storage policies for ID photos
+CREATE POLICY "Users can upload their own ID photos" ON storage.objects
+    FOR INSERT WITH CHECK (bucket_id = 'id-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
+
+CREATE POLICY "Users can view their own ID photos" ON storage.objects
+    FOR SELECT USING (bucket_id = 'id-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
+
+CREATE POLICY "Users can delete their own ID photos" ON storage.objects
+    FOR DELETE USING (bucket_id = 'id-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
