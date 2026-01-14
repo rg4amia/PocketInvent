@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'client_controller.dart';
 import '../../core/theme/app_colors.dart';
+import '../widgets/id_photo_picker.dart';
 
 class ClientView extends GetView<ClientController> {
   const ClientView({super.key});
