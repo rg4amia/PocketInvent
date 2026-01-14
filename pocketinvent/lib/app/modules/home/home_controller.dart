@@ -15,6 +15,10 @@ class HomeController extends GetxController {
   final telephones = <TelephoneModel>[].obs;
   final filteredTelephones = <TelephoneModel>[].obs;
 
+  // Navigation
+  final RxInt currentNavIndex = 1.obs;
+  final RxInt transactionBadgeCount = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -111,6 +115,29 @@ class HomeController extends GetxController {
         'Échec de la déconnexion: ${e.toString()}',
         snackPosition: SnackPosition.BOTTOM,
       );
+    }
+  }
+
+  /// Handle navigation bar tap
+  ///
+  /// Requirements: 5.3, 5.4
+  void onNavTap(int index) {
+    if (index == currentNavIndex.value) return;
+
+    currentNavIndex.value = index;
+    switch (index) {
+      case 0:
+        Get.offNamed(Routes.DASHBOARD);
+        break;
+      case 1:
+        // Already on inventory
+        break;
+      case 2:
+        Get.offNamed(Routes.TRANSACTIONS);
+        break;
+      case 3:
+        Get.offNamed(Routes.HUB);
+        break;
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'home_controller.dart';
 import '../../core/theme/app_colors.dart';
 import '../../data/models/telephone_model.dart';
+import '../widgets/main_nav_bar.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -77,6 +78,11 @@ class HomeView extends GetView<HomeController> {
           child: Icon(Icons.add, size: 24),
         ),
       ),
+      bottomNavigationBar: Obx(() => MainNavBar(
+            currentIndex: controller.currentNavIndex.value,
+            onTap: controller.onNavTap,
+            transactionBadgeCount: controller.transactionBadgeCount.value,
+          )),
     );
   }
 
