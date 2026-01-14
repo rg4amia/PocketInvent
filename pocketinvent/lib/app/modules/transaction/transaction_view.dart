@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dashboard_controller.dart';
+import 'transaction_controller.dart';
 import '../../core/theme/app_colors.dart';
 import '../widgets/main_nav_bar.dart';
 
-class DashboardView extends GetView<DashboardController> {
-  const DashboardView({super.key});
+class TransactionView extends GetView<TransactionController> {
+  const TransactionView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class DashboardView extends GetView<DashboardController> {
       backgroundColor: AppColors.backgroundSecondary,
       appBar: AppBar(
         title: const Text(
-          'Dashboard',
+          'Transactions',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
@@ -28,13 +28,13 @@ class DashboardView extends GetView<DashboardController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.dashboard_rounded,
+              Icons.receipt_long_rounded,
               size: 80,
               color: AppColors.primaryBlue.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
-              'Dashboard Financier',
+              'Historique des Transactions',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
