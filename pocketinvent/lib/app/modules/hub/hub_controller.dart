@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 import '../../routes/app_pages.dart';
 import '../../data/services/supabase_service.dart';
+import '../../data/services/notification_service.dart';
 
 class HubController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
+  late final NotificationService _notificationService;
 
   final userName = ''.obs;
   final userEmail = ''.obs;
@@ -13,7 +15,16 @@ class HubController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _notificationService = Get.find<NotificationService>();
     _loadUserInfo();
+    _updateBadgeCount();
+  }
+
+  /// Update the transaction badge count
+  ///
+  /// Requirements: 5.6
+  void _updateBadgeCount() {
+    transactionBadgeCount.value = _notificationService.getNewTransactionCount();
   }
 
   void _loadUserInfo() {

@@ -129,7 +129,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Implémenter le highlighting de la section active
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.7_
 
-  - [-] 7.2 Ajouter le système de badges de notification
+  - [x] 7.2 Ajouter le système de badges de notification
     - Implémenter la détection de nouvelles transactions
     - Afficher le badge sur l'icône Transactions
     - _Requirements: 5.6_

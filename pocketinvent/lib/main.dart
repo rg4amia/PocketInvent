@@ -8,6 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app/routes/app_pages.dart';
 import 'app/core/theme/app_theme.dart';
 import 'app/data/services/storage_service.dart';
+import 'app/data/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,9 @@ void main() async {
   // Initialize Hive
   await Hive.initFlutter();
   await Get.putAsync(() => StorageService().init());
+
+  // Initialize NotificationService
+  Get.put(NotificationService());
 
   // Initialize Supabase
   await Supabase.initialize(

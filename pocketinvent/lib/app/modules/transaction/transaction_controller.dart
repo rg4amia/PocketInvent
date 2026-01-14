@@ -3,6 +3,7 @@ import '../../data/models/period.dart';
 import '../../data/models/transaction_model.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
+import '../../data/services/notification_service.dart';
 import '../../routes/app_pages.dart';
 
 /// Controller for the transaction list view
@@ -14,6 +15,7 @@ import '../../routes/app_pages.dart';
 class TransactionController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final StorageService _storageService = Get.find<StorageService>();
+  late final NotificationService _notificationService;
 
   // Observables
   final RxList<TransactionModel> allTransactions = <TransactionModel>[].obs;
@@ -33,12 +35,24 @@ class TransactionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _notificationService = Get.find<NotificationService>();
     loadTransactions();
 
     // Apply filters whenever any filter changes
     ever(selectedType, (_) => _applyFilters());
     ever(selectedPeriod, (_) => _applyFilters());
     ever(searchQuery, (_) => _applyFilters());
+
+    // Mark transactions as viewed when entering this screen
+    _markAsViewed();
+  }
+
+  /// Mark transactions as viewed and update badge count
+  ///
+  /// Requirements: 5.6
+  Future<void> _markAsViewed() async {
+    await _notificationService.markTransactionsAsViewed();
+    transactionBadgeCount.value = 0;
   }
 
   /// Load all transactions from cache and Supabase

@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import '../../data/models/telephone_model.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
+import '../../data/services/notification_service.dart';
 import '../../routes/app_pages.dart';
 
 class HomeController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final StorageService _storageService = Get.find<StorageService>();
+  late final NotificationService _notificationService;
 
   final searchController = TextEditingController();
   final selectedTab = 0.obs;
@@ -22,8 +24,17 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _notificationService = Get.find<NotificationService>();
     loadTelephones();
     searchController.addListener(_filterTelephones);
+    _updateBadgeCount();
+  }
+
+  /// Update the transaction badge count
+  ///
+  /// Requirements: 5.6
+  void _updateBadgeCount() {
+    transactionBadgeCount.value = _notificationService.getNewTransactionCount();
   }
 
   Future<void> loadTelephones() async {
