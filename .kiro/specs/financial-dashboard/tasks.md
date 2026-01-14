@@ -121,7 +121,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - **Property 23: IMEI Search Filtering**
     - **Validates: Requirements 2.6, 2.7, 2.8**
 
-- [-] 7. Créer la navigation moderne (Bottom NavBar)
+- [x] 7. Créer la navigation moderne (Bottom NavBar)
   - [x] 7.1 Créer le widget MainNavBar
     - Définir les 4 sections (Dashboard, Inventaire, Transactions, Profil)
     - Implémenter la navigation entre sections
