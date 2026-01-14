@@ -9,6 +9,12 @@ import '../modules/phone/add_phone_binding.dart';
 import '../modules/phone/add_phone_view.dart';
 import '../modules/phone/phone_detail_binding.dart';
 import '../modules/phone/phone_detail_view.dart';
+import '../modules/fournisseur/fournisseur_binding.dart';
+import '../modules/fournisseur/fournisseur_view.dart';
+import '../modules/client/client_binding.dart';
+import '../modules/client/client_view.dart';
+import '../modules/reference/reference_binding.dart';
+import '../modules/reference/reference_view.dart';
 
 part 'app_routes.dart';
 
@@ -42,6 +48,21 @@ class AppPages {
       name: _Paths.PHONE_DETAIL,
       page: () => const PhoneDetailView(),
       binding: PhoneDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.FOURNISSEUR,
+      page: () => const FournisseurView(),
+      binding: FournisseurBinding(),
+    ),
+    GetPage(
+      name: _Paths.CLIENT,
+      page: () => const ClientView(),
+      binding: ClientBinding(),
+    ),
+    GetPage(
+      name: _Paths.REFERENCE,
+      page: () => const ReferenceView(),
+      binding: ReferenceBinding(),
     ),
   ];
 }
