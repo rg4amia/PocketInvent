@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../reference_controller.dart';
+import '../../../core/theme/app_colors.dart';
 
 class CouleurTab extends GetView<ReferenceController> {
   const CouleurTab({super.key});
@@ -8,9 +9,12 @@ class CouleurTab extends GetView<ReferenceController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundPrimary,
       body: Obx(() {
         if (controller.isLoading.value && controller.couleurs.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(color: AppColors.primaryBlue),
+          );
         }
 
         if (controller.couleurs.isEmpty) {
@@ -18,23 +22,41 @@ class CouleurTab extends GetView<ReferenceController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.palette, size: 64, color: Colors.grey[400]),
+                Icon(Icons.palette_outlined, size: 64, color: Colors.grey[400]),
                 const SizedBox(height: 16),
-                Text('Aucune couleur',
-                    style: TextStyle(color: Colors.grey[600])),
+                Text(
+                  'Aucune couleur',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  onPressed: _showAddDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Ajouter une couleur'),
+                ),
               ],
             ),
           );
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           itemCount: controller.couleurs.length,
           itemBuilder: (context, index) {
             final couleur = controller.couleurs[index];
-            return Card(
-              margin: const EdgeInsets.only(bottom: 8),
+            return Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: AppColors.backgroundPrimary,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.border, width: 1),
+              ),
               child: ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 leading: couleur.codeCouleur != null
                     ? Container(
                         width: 40,
@@ -42,23 +64,45 @@ class CouleurTab extends GetView<ReferenceController> {
                         decoration: BoxDecoration(
                           color: _parseColor(couleur.codeCouleur!),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey[300]!),
+                          border: Border.all(color: AppColors.border, width: 2),
                         ),
                       )
                     : null,
-                title: Text(couleur.libelle),
+                title: Text(
+                  couleur.libelle,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -0.3,
+                  ),
+                ),
                 subtitle: couleur.codeCouleur != null
-                    ? Text(couleur.codeCouleur!)
+                    ? Text(
+                        couleur.codeCouleur!,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                        ),
+                      )
                     : null,
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      icon: Icon(
+                        Icons.edit_outlined,
+                        color: AppColors.editAccent,
+                        size: 20,
+                      ),
                       onPressed: () => _showEditDialog(couleur),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
+                      icon: Icon(
+                        Icons.delete_outline,
+                        color: AppColors.deleteAccent,
+                        size: 20,
+                      ),
                       onPressed: () => controller.deleteCouleur(couleur.id),
                     ),
                   ],
@@ -70,7 +114,8 @@ class CouleurTab extends GetView<ReferenceController> {
       }),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddDialog,
-        child: const Icon(Icons.add),
+        backgroundColor: AppColors.primaryBlue,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -89,23 +134,52 @@ class CouleurTab extends GetView<ReferenceController> {
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Nouvelle couleur'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Nouvelle couleur',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+            letterSpacing: -0.3,
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: controller.textController,
-              decoration: const InputDecoration(
+              style: const TextStyle(fontSize: 15),
+              decoration: InputDecoration(
                 labelText: 'Nom de la couleur',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                filled: true,
+                fillColor: AppColors.inputBackground,
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: controller.colorCodeController,
-              decoration: const InputDecoration(
+              style: const TextStyle(fontSize: 15),
+              decoration: InputDecoration(
                 labelText: 'Code couleur (ex: #FF0000)',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                filled: true,
+                fillColor: AppColors.inputBackground,
               ),
             ),
           ],
@@ -113,10 +187,21 @@ class CouleurTab extends GetView<ReferenceController> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Annuler'),
+            child: Text(
+              'Annuler',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ),
           ElevatedButton(
             onPressed: controller.createCouleur,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryBlue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
             child: const Text('Créer'),
           ),
         ],
@@ -130,23 +215,52 @@ class CouleurTab extends GetView<ReferenceController> {
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Modifier couleur'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Modifier couleur',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+            letterSpacing: -0.3,
+          ),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: controller.textController,
-              decoration: const InputDecoration(
+              style: const TextStyle(fontSize: 15),
+              decoration: InputDecoration(
                 labelText: 'Nom de la couleur',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                filled: true,
+                fillColor: AppColors.inputBackground,
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: controller.colorCodeController,
-              decoration: const InputDecoration(
+              style: const TextStyle(fontSize: 15),
+              decoration: InputDecoration(
                 labelText: 'Code couleur (ex: #FF0000)',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                filled: true,
+                fillColor: AppColors.inputBackground,
               ),
             ),
           ],
@@ -154,10 +268,21 @@ class CouleurTab extends GetView<ReferenceController> {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Annuler'),
+            child: Text(
+              'Annuler',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
           ),
           ElevatedButton(
             onPressed: () => controller.updateCouleur(couleur.id),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryBlue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
             child: const Text('Modifier'),
           ),
         ],

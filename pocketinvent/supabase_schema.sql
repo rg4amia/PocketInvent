@@ -223,10 +223,14 @@ INSERT INTO modele (nom, marque_id)
 SELECT 'Galaxy Z Flip 5', id FROM marque WHERE nom = 'Samsung';
 
 -- Storage bucket for phone photos
-INSERT INTO storage.buckets (id, name, public) VALUES ('phone-photos', 'phone-photos', true);
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('phone-photos', 'phone-photos', true)
+ON CONFLICT (id) DO NOTHING;
 
 -- Storage bucket for ID photos
-INSERT INTO storage.buckets (id, name, public) VALUES ('id-photos', 'id-photos', true);
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('id-photos', 'id-photos', true)
+ON CONFLICT (id) DO NOTHING;
 
 -- Storage policies for phone photos
 CREATE POLICY "Users can upload their own phone photos" ON storage.objects
