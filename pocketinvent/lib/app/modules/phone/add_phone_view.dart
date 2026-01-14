@@ -18,7 +18,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
         ),
       ),
       body: Obx(() {
-        if (controller.ity) {
+        if (controller.isLoading.value) {
           return Center(
             child: CircularProgressIndicator(color: AppColors.primaryBlue),
           );
@@ -34,7 +34,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
               _buildPhotoSection(),
               const SizedBox(height: 24),
               _buildDetailsSection(),
-dBox(height: 32),
+              const SizedBox(height: 32),
               _buildSaveButton(),
               const SizedBox(height: 24),
             ],
@@ -112,7 +112,7 @@ dBox(height: 32),
         children: [
           Text(
             'Photo du téléphone',
-            stylxtStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: AppColors.textPrimary,
@@ -136,7 +136,8 @@ dBox(height: 32),
                       const SizedBox(height: 12),
                       OutlinedButton.icon(
                         onPressed: () => controller.phoneImage.value = null,
-                        icon: Icon(Icons.delete_outline, color: AppColors.deleteAccent, size: 20),
+                        icon: Icon(Icons.delete_outline,
+                            color: AppColors.deleteAccent, size: 20),
                         label: Text(
                           'Supprimer',
                           style: TextStyle(color: AppColors.deleteAccent),
@@ -160,7 +161,7 @@ dBox(height: 32),
                       Expanded(
                         child: OutlinedButton.icon(
                           onPressed: controller.pickPhoneImageFromGallery,
-   lined, size: 20),
+                          icon: Icon(Icons.photo_library_outlined, size: 20),
                           label: Text('Galerie'),
                         ),
                       ),
@@ -202,7 +203,8 @@ dBox(height: 32),
               value: controller.selectedMarque.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner une marque',
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               ),
               items: controller.marques.map((marque) {
                 return DropdownMenuItem(
@@ -223,7 +225,8 @@ dBox(height: 32),
               value: controller.selectedModele.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner un modèle',
-                rizontal: 16, vertical: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               ),
               items: controller.modeles.map((modele) {
                 return DropdownMenuItem(
@@ -244,12 +247,14 @@ dBox(height: 32),
               value: controller.selectedCouleur.value,
               decoration: InputDecoration(
                 hintText: 'Sélectionner une couleur',
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               ),
               items: controller.couleurs.map((couleur) {
                 return DropdownMenuItem(
                   value: couleur,
-                  child: Text(couleur['libelle'], style: TextStyle(fontSize: 15)),
+                  child:
+                      Text(couleur['libelle'], style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: (value) => controller.selectedCouleur.value = value,
@@ -263,14 +268,16 @@ dBox(height: 32),
           Obx(
             () => DropdownButtonFormField<Map<String, dynamic>>(
               value: controller.selectedCapacite.value,
-              decoration(
+              decoration: InputDecoration(
                 hintText: 'Sélectionner une capacité',
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               ),
               items: controller.capacites.map((capacite) {
                 return DropdownMenuItem(
                   value: capacite,
-                  child: Text(capacite['valeur'], style: TextStyle(fontSize: 15)),
+                  child:
+                      Text(capacite['valeur'], style: TextStyle(fontSize: 15)),
                 );
               }).toList(),
               onChanged: (value) => controller.selectedCapacite.value = value,
@@ -289,7 +296,7 @@ dBox(height: 32),
               hintText: '0.00',
               suffixText: '€',
               suffixStyle: TextStyle(
-       color: AppColors.textSecondary,
+                color: AppColors.textSecondary,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
@@ -304,20 +311,56 @@ dBox(height: 32),
             () => DropdownButtonFormField<Map<String, dynamic>>(
               value: controller.selectedFournisseur.value,
               decoration: InputDecoration(
-               un fournisseur',
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                hintText: 'Sélectionner un fournisseur',
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               ),
               items: controller.fournisseurs.map((fournisseur) {
                 return DropdownMenuItem(
                   value: fournisseur,
-    ),
-              )
-            : Text('Enregistrer'),
+                  child:
+                      Text(fournisseur['nom'], style: TextStyle(fontSize: 15)),
+                );
+              }).toList(),
+              onChanged: (value) =>
+                  controller.selectedFournisseur.value = value,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Statut de paiement
+          _buildLabel('Statut de paiement *'),
+          const SizedBox(height: 6),
+          Obx(
+            () => DropdownButtonFormField<Map<String, dynamic>>(
+              value: controller.selectedStatutPaiement.value,
+              decoration: InputDecoration(
+                hintText: 'Sélectionner un statut',
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              ),
+              items: controller.statutsPaiement.map((statut) {
+                return DropdownMenuItem(
+                  value: statut,
+                  child:
+                      Text(statut['libelle'], style: TextStyle(fontSize: 15)),
+                );
+              }).toList(),
+              onChanged: (value) =>
+                  controller.selectedStatutPaiement.value = value,
+            ),
+          ),
+        ],
       ),
     );
   }
-}
-.w500,
+
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
         color: AppColors.textPrimary,
       ),
     );
@@ -334,41 +377,10 @@ dBox(height: 32),
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            tsPaiement.map((statut) {
-                return DropdownMenuItem(
-                  value: statut,
-                  child: Text(statut['libelle'], style: TextStyle(fontSize: 15)),
-                );
-              }).toList(),
-              onChanged: (value) => controller.selectedStatutPaiement.value = value,
-            ),
-          ),
-        ],
+                ),
+              )
+            : Text('Enregistrer'),
       ),
     );
   }
-
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeightst SizedBox(height: 16),
-
-          // Statut de paiement
-          _buildLabel('Statut de paiement *'),
-          const SizedBox(height: 6),
-          Obx(
-            () => DropdownButtonFormField<Map<String, dynamic>>(
-              value: controller.selectedStatutPaiement.value,
-              decoration: InputDecoration(
-                hintText: 'Sélectionner un statut',
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              ),
-              items: controller.statu                  child: Text(fournisseur['nom'], style: TextStyle(fontSize: 15)),
-                );
-              }).toList(),
-              onChanged: (value) => controller.selectedFournisseur.value = value,
-            ),
-          ),
-          con
+}

@@ -19,7 +19,7 @@ class SplashController extends GetxController {
       _supabaseService = Get.put(SupabaseService());
       print('[SPLASH] SupabaseService initialized');
 
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(milliseconds: 500));
 
       final user = _supabaseService.currentUser;
       print('[SPLASH] Current user: ${user?.id ?? "null"}');
