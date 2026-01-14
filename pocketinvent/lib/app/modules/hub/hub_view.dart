@@ -28,33 +28,18 @@ class HubView extends GetView<HubController> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.grey[50],
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(32),
                       topRight: Radius.circular(32),
                     ),
                   ),
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.all(24),
+                    padding: EdgeInsets.fromLTRB(24, 24, 24, 100),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Menu Principal',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Accédez à toutes les fonctionnalités',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
+                        _buildWelcomeCard(),
                         SizedBox(height: 32),
 
                         // Section Inventaire
@@ -68,6 +53,13 @@ class HubView extends GetView<HubController> {
                                 title: 'Téléphones',
                                 subtitle: 'Voir l\'inventaire',
                                 color: AppColors.primaryBlue,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppColors.primaryBlue,
+                                    AppColors.primaryBlue
+                                        .withValues(alpha: 0.8),
+                                  ],
+                                ),
                                 onTap: controller.navigateToInventory,
                               ),
                             ),
@@ -78,13 +70,19 @@ class HubView extends GetView<HubController> {
                                 title: 'Ajouter',
                                 subtitle: 'Nouveau téléphone',
                                 color: Color(0xFF10B981),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF10B981),
+                                    Color(0xFF059669),
+                                  ],
+                                ),
                                 onTap: controller.navigateToAddPhone,
                               ),
                             ),
                           ],
                         ),
 
-                        SizedBox(height: 32),
+                        SizedBox(height: 24),
 
                         // Section Contacts
                         _buildSectionTitle('CONTACTS'),
@@ -97,6 +95,12 @@ class HubView extends GetView<HubController> {
                                 title: 'Fournisseurs',
                                 subtitle: 'Gérer les fournisseurs',
                                 color: Color(0xFFF59E0B),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFF59E0B),
+                                    Color(0xFFD97706),
+                                  ],
+                                ),
                                 onTap: controller.navigateToFournisseurs,
                               ),
                             ),
@@ -107,13 +111,19 @@ class HubView extends GetView<HubController> {
                                 title: 'Clients',
                                 subtitle: 'Gérer les clients',
                                 color: Color(0xFF8B5CF6),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFF8B5CF6),
+                                    Color(0xFF7C3AED),
+                                  ],
+                                ),
                                 onTap: controller.navigateToClients,
                               ),
                             ),
                           ],
                         ),
 
-                        SizedBox(height: 32),
+                        SizedBox(height: 24),
 
                         // Section Configuration
                         _buildSectionTitle('CONFIGURATION'),
@@ -124,11 +134,17 @@ class HubView extends GetView<HubController> {
                           subtitle:
                               'Marques, modèles, couleurs, capacités, statuts',
                           color: Color(0xFF6B7280),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF6B7280),
+                              Color(0xFF4B5563),
+                            ],
+                          ),
                           onTap: controller.navigateToReferences,
                           isWide: true,
                         ),
 
-                        SizedBox(height: 32),
+                        SizedBox(height: 24),
 
                         // Bouton Déconnexion
                         _buildLogoutButton(),
@@ -143,28 +159,91 @@ class HubView extends GetView<HubController> {
           ),
         ),
       ),
+      bottomNavigationBar: _buildBottomNavBar(),
     );
   }
 
   Widget _buildHeader() {
     return Container(
       padding: EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.3),
+                width: 2,
+              ),
+            ),
+            child: Icon(
+              Icons.phone_iphone_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'GOSTOCK',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Gestion de stock',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white.withValues(alpha: 0.9),
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWelcomeCard() {
+    return Obx(() => Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.primaryBlue.withValues(alpha: 0.1),
+                AppColors.primaryBlue.withValues(alpha: 0.05),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: AppColors.primaryBlue.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Row(
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: AppColors.primaryBlue.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  Icons.phone_iphone_rounded,
-                  color: Colors.white,
-                  size: 28,
+                  Icons.waving_hand,
+                  color: AppColors.primaryBlue,
+                  size: 24,
                 ),
               ),
               SizedBox(width: 16),
@@ -173,32 +252,29 @@ class HubView extends GetView<HubController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'GOSTOCK',
+                      controller.userName.value.isNotEmpty
+                          ? 'Bonjour, ${controller.userName.value}!'
+                          : 'Bienvenue!',
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1.5,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 4),
-                    Obx(() => Text(
-                          controller.userName.value.isNotEmpty
-                              ? 'Bonjour, ${controller.userName.value}'
-                              : 'Gestion de stock',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white.withValues(alpha: 0.95),
-                          ),
-                        )),
+                    Text(
+                      'Que souhaitez-vous faire aujourd\'hui?',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget _buildSectionTitle(String title) {
@@ -218,6 +294,7 @@ class HubView extends GetView<HubController> {
     required String title,
     required String subtitle,
     required Color color,
+    required Gradient gradient,
     required VoidCallback onTap,
     bool isWide = false,
   }) {
@@ -228,11 +305,10 @@ class HubView extends GetView<HubController> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey[200]!),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
+              color: color.withValues(alpha: 0.15),
+              blurRadius: 12,
               offset: Offset(0, 4),
             ),
           ],
@@ -241,16 +317,23 @@ class HubView extends GetView<HubController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+                gradient: gradient,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
               ),
               child: Icon(
                 icon,
-                color: color,
-                size: 24,
+                color: Colors.white,
+                size: 26,
               ),
             ),
             SizedBox(height: 16),
@@ -283,22 +366,38 @@ class HubView extends GetView<HubController> {
       onTap: () {
         Get.dialog(
           AlertDialog(
-            title: Text('Déconnexion'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              children: [
+                Icon(Icons.logout, color: Colors.red),
+                SizedBox(width: 12),
+                Text('Déconnexion'),
+              ],
+            ),
             content: Text('Voulez-vous vraiment vous déconnecter ?'),
             actions: [
               TextButton(
                 onPressed: () => Get.back(),
-                child: Text('Annuler'),
+                child: Text(
+                  'Annuler',
+                  style: TextStyle(color: AppColors.textSecondary),
+                ),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Get.back();
                   controller.signOut();
                 },
-                child: Text(
-                  'Déconnexion',
-                  style: TextStyle(color: Colors.red),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
+                child: Text('Déconnexion'),
               ),
             ],
           ),
@@ -307,9 +406,16 @@ class HubView extends GetView<HubController> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.red.withValues(alpha: 0.05),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
+          border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.red.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -322,6 +428,111 @@ class HubView extends GetView<HubController> {
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.red,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavBar() {
+    return Obx(() => Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 20,
+                offset: Offset(0, -5),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    icon: Icons.home_rounded,
+                    label: 'Accueil',
+                    index: 0,
+                    isSelected: controller.currentNavIndex.value == 0,
+                  ),
+                  _buildNavItem(
+                    icon: Icons.inventory_2_rounded,
+                    label: 'Stock',
+                    index: 1,
+                    isSelected: controller.currentNavIndex.value == 1,
+                  ),
+                  _buildNavItem(
+                    icon: Icons.add_circle,
+                    label: 'Ajouter',
+                    index: 2,
+                    isSelected: controller.currentNavIndex.value == 2,
+                    isCenter: true,
+                  ),
+                  _buildNavItem(
+                    icon: Icons.settings_rounded,
+                    label: 'Config',
+                    index: 3,
+                    isSelected: controller.currentNavIndex.value == 3,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+
+  Widget _buildNavItem({
+    required IconData icon,
+    required String label,
+    required int index,
+    required bool isSelected,
+    bool isCenter = false,
+  }) {
+    final color = isSelected ? AppColors.primaryBlue : Colors.grey[400]!;
+
+    return GestureDetector(
+      onTap: () => controller.onNavTap(index),
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: isCenter && isSelected
+            ? BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primaryBlue,
+                    AppColors.primaryBlue.withValues(alpha: 0.8),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primaryBlue.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              )
+            : null,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isCenter && isSelected ? Colors.white : color,
+              size: isCenter ? 28 : 24,
+            ),
+            SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: isCenter && isSelected ? Colors.white : color,
               ),
             ),
           ],

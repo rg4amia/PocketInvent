@@ -7,6 +7,7 @@ class HubController extends GetxController {
 
   final userName = ''.obs;
   final userEmail = ''.obs;
+  final currentNavIndex = 0.obs;
 
   @override
   void onInit() {
@@ -40,6 +41,24 @@ class HubController extends GetxController {
 
   void navigateToReferences() {
     Get.toNamed(Routes.REFERENCE);
+  }
+
+  void onNavTap(int index) {
+    currentNavIndex.value = index;
+    switch (index) {
+      case 0:
+        // Already on hub
+        break;
+      case 1:
+        navigateToInventory();
+        break;
+      case 2:
+        navigateToAddPhone();
+        break;
+      case 3:
+        navigateToReferences();
+        break;
+    }
   }
 
   Future<void> signOut() async {
