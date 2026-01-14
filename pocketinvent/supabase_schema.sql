@@ -152,13 +152,37 @@ ALTER TABLE modele ENABLE ROW LEVEL SECURITY;
 ALTER TABLE capacite ENABLE ROW LEVEL SECURITY;
 ALTER TABLE statut_paiement ENABLE ROW LEVEL SECURITY;
 
+-- Couleur policies
 CREATE POLICY "Anyone can view couleurs" ON couleur FOR SELECT USING (true);
-CREATE POLICY "Anyone can view marques" ON marque FOR SELECT USING (true);
-CREATE POLICY "Anyone can view modeles" ON modele FOR SELECT USING (true);
-CREATE POLICY "Anyone can view capacites" ON capacite FOR SELECT USING (true);
-CREATE POLICY "Anyone can view statut_paiement" ON statut_paiement FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert couleurs" ON couleur FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can update couleurs" ON couleur FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can delete couleurs" ON couleur FOR DELETE USING (auth.role() = 'authenticated');
 
--- Insert default data
+-- Marque policies
+CREATE POLICY "Anyone can view marques" ON marque FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert marques" ON marque FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can update marques" ON marque FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can delete marques" ON marque FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Modele policies
+CREATE POLICY "Anyone can view modeles" ON modele FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert modeles" ON modele FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can update modeles" ON modele FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can delete modeles" ON modele FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Capacite policies
+CREATE POLICY "Anyone can view capacites" ON capacite FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert capacites" ON capacite FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can update capacites" ON capacite FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can delete capacites" ON capacite FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Statut_paiement policies
+CREATE POLICY "Anyone can view statut_paiement" ON statut_paiement FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can insert statut_paiement" ON statut_paiement FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can update statut_paiement" ON statut_paiement FOR UPDATE USING (auth.role() = 'authenticated');
+CREATE POLICY "Authenticated users can delete statut_paiement" ON statut_paiement FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Insert default data 
 
 -- Statuts de paiement
 INSERT INTO statut_paiement (libelle) VALUES
@@ -233,6 +257,10 @@ VALUES ('id-photos', 'id-photos', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Storage policies for phone photos
+DROP POLICY IF EXISTS "Users can upload their own phone photos" ON storage.objects;
+DROP POLICY IF EXISTS "Anyone can view phone photos" ON storage.objects;
+DROP POLICY IF EXISTS "Users can delete their own phone photos" ON storage.objects;
+
 CREATE POLICY "Users can upload their own phone photos" ON storage.objects
     FOR INSERT WITH CHECK (bucket_id = 'phone-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
 
@@ -243,6 +271,10 @@ CREATE POLICY "Users can delete their own phone photos" ON storage.objects
     FOR DELETE USING (bucket_id = 'phone-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
 
 -- Storage policies for ID photos
+DROP POLICY IF EXISTS "Users can upload their own ID photos" ON storage.objects;
+DROP POLICY IF EXISTS "Users can view their own ID photos" ON storage.objects;
+DROP POLICY IF EXISTS "Users can delete their own ID photos" ON storage.objects;
+
 CREATE POLICY "Users can upload their own ID photos" ON storage.objects
     FOR INSERT WITH CHECK (bucket_id = 'id-photos' AND auth.uid()::text = (storage.foldername(name))[1]);
 
