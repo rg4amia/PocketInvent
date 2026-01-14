@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'storage_service.dart';
-import '../models/transaction_model.dart';
 
 /// Service for managing notification badges
 ///
