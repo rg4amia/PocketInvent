@@ -7,6 +7,10 @@ import '../modules/hub/hub_binding.dart';
 import '../modules/hub/hub_view.dart';
 import '../modules/home/home_binding.dart';
 import '../modules/home/home_view.dart';
+import '../modules/dashboard/dashboard_binding.dart';
+import '../modules/dashboard/dashboard_view.dart';
+import '../modules/transaction/transaction_binding.dart';
+import '../modules/transaction/transaction_view.dart';
 import '../modules/phone/add_phone_binding.dart';
 import '../modules/phone/add_phone_view.dart';
 import '../modules/phone/phone_detail_binding.dart';
@@ -49,6 +53,16 @@ class AppPages {
       name: _Paths.HOME,
       page: () => const HomeView(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.DASHBOARD,
+      page: () => const DashboardView(),
+      binding: DashboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRANSACTIONS,
+      page: () => const TransactionView(),
+      binding: TransactionBinding(),
     ),
     GetPage(
       name: _Paths.ADD_PHONE,
