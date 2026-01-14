@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'fournisseur_controller.dart';
 import '../../core/theme/app_colors.dart';
-import '../widgets/id_photo_picker.dart';
 
 class FournisseurView extends GetView<FournisseurController> {
   const FournisseurView({super.key});
