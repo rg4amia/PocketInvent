@@ -6,6 +6,8 @@ abstract class Routes {
   static const AUTH = _Paths.AUTH;
   static const HUB = _Paths.HUB;
   static const HOME = _Paths.HOME;
+  static const DASHBOARD = _Paths.DASHBOARD;
+  static const TRANSACTIONS = _Paths.TRANSACTIONS;
   static const ADD_PHONE = _Paths.ADD_PHONE;
   static const PHONE_DETAIL = _Paths.PHONE_DETAIL;
   static const FOURNISSEUR = _Paths.FOURNISSEUR;
@@ -21,6 +23,8 @@ abstract class _Paths {
   static const AUTH = '/auth';
   static const HUB = '/hub';
   static const HOME = '/home';
+  static const DASHBOARD = '/dashboard';
+  static const TRANSACTIONS = '/transactions';
   static const ADD_PHONE = '/add-phone';
   static const PHONE_DETAIL = '/phone-detail';
   static const FOURNISSEUR = '/fournisseur';
