@@ -3,7 +3,7 @@ import '../../data/services/supabase_service.dart';
 import '../../routes/app_pages.dart';
 
 class SplashController extends GetxController {
-  final SupabaseService _supabaseService = Get.put(SupabaseService());
+  late final SupabaseService _supabaseService;
 
   @override
   void onInit() {
@@ -12,11 +12,29 @@ class SplashController extends GetxController {
   }
 
   Future<void> _checkAuth() async {
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      print('[SPLASH] Starting auth check...');
 
-    if (_supabaseService.currentUser != null) {
-      Get.offAllNamed(Routes.HOME);
-    } else {
+      // Initialize SupabaseService
+      _supabaseService = Get.put(SupabaseService());
+      print('[SPLASH] SupabaseService initialized');
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      final user = _supabaseService.currentUser;
+      print('[SPLASH] Current user: ${user?.id ?? "null"}');
+
+      if (user != null) {
+        print('[SPLASH] Navigating to HOME');
+        Get.offAllNamed(Routes.HOME);
+      } else {
+        print('[SPLASH] Navigating to AUTH');
+        Get.offAllNamed(Routes.AUTH);
+      }
+    } catch (e, stackTrace) {
+      print('[SPLASH] Error during auth check: $e');
+      print('[SPLASH] StackTrace: $stackTrace');
+      // Navigate to auth on error
       Get.offAllNamed(Routes.AUTH);
     }
   }

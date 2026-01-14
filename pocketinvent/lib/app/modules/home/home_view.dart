@@ -12,52 +12,90 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundSecondary,
+      backgroundColor: AppColors.backgroundPrimary,
       appBar: AppBar(
-        title: Text('PocketInvent'),
+        title: Text('Inventaire'),
         actions: [
-          PopupMenuButton(
-            icon: Icon(Icons.more_horiz),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                child: Text('Déconnexion'),
-                onTap: controller.signOut,
-              ),
-            ],
+          IconButton(
+            icon: Icon(Icons.more_horiz_rounded, size: 24),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (context) => Container(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading:
+                            Icon(Icons.logout, color: AppColors.deleteAccent),
+                        title: Text('Déconnexion'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          controller.signOut();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),
       body: Column(
         children: [
           _buildSearchBar(),
+          const SizedBox(height: 12),
           _buildSegmentedTabs(),
+          const SizedBox(height: 16),
           Expanded(child: _buildPhoneList()),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: controller.goToAddPhone,
-        backgroundColor: AppColors.primaryBlue,
-        child: Icon(Icons.add, color: Colors.white),
+      floatingActionButton: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.fabShadow,
+              blurRadius: 12,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: controller.goToAddPhone,
+          child: Icon(Icons.add, size: 24),
+        ),
       ),
     );
   }
 
   Widget _buildSearchBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: TextField(
         controller: controller.searchController,
+        style: TextStyle(fontSize: 15),
         decoration: InputDecoration(
           hintText: 'Rechercher par IMEI, marque, modèle...',
-          hintStyle: TextStyle(fontSize: 15, color: AppColors.textTertiary),
-          prefixIcon: Icon(Icons.search, color: AppColors.textSecondary),
+          hintStyle: TextStyle(fontSize: 15, color: AppColors.textPlaceholder),
+          prefixIcon:
+              Icon(Icons.search, color: AppColors.textSecondary, size: 20),
+          suffixIcon:
+              Icon(Icons.tune, color: AppColors.textSecondary, size: 20),
           filled: true,
-          fillColor: AppColors.backgroundSecondary,
+          fillColor: AppColors.inputBackground,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
     );
@@ -87,18 +125,22 @@ class HomeView extends GetView<HomeController> {
       child: GestureDetector(
         onTap: () => controller.onTabChanged(index),
         child: Container(
-          height: 32,
+          height: 36,
           decoration: BoxDecoration(
             color: isSelected
                 ? AppColors.primaryBlue
                 : AppColors.backgroundPrimary,
             borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected ? AppColors.primaryBlue : AppColors.border,
+              width: 1,
+            ),
           ),
           alignment: Alignment.center,
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: isSelected ? Colors.white : AppColors.primaryBlue,
             ),
@@ -111,7 +153,11 @@ class HomeView extends GetView<HomeController> {
   Widget _buildPhoneList() {
     return Obx(() {
       if (controller.isLoading.value && controller.filteredTelephones.isEmpty) {
-        return Center(child: CircularProgressIndicator());
+        return Center(
+          child: CircularProgressIndicator(
+            color: AppColors.primaryBlue,
+          ),
+        );
       }
 
       if (controller.filteredTelephones.isEmpty) {
@@ -121,18 +167,25 @@ class HomeView extends GetView<HomeController> {
             children: [
               Icon(
                 Icons.phone_iphone_outlined,
-                size: 64,
-                color: AppColors.textTertiary,
+                size: 80,
+                color: AppColors.textPlaceholder,
               ),
               const SizedBox(height: 16),
               Text(
                 'Aucun téléphone',
-                style: TextStyle(fontSize: 17, color: AppColors.textSecondary),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Appuyez sur + pour ajouter',
-                style: TextStyle(fontSize: 15, color: AppColors.textTertiary),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textSecondary,
+                ),
               ),
             ],
           ),
@@ -141,8 +194,9 @@ class HomeView extends GetView<HomeController> {
 
       return RefreshIndicator(
         onRefresh: controller.loadTelephones,
+        color: AppColors.primaryBlue,
         child: ListView.separated(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           itemCount: controller.filteredTelephones.length,
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
@@ -161,13 +215,13 @@ class HomeView extends GetView<HomeController> {
       onTap: () => controller.goToPhoneDetail(phone),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.backgroundPrimary,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: AppColors.shadow,
-              blurRadius: 6,
-              offset: Offset(0, 2),
+              blurRadius: 3,
+              offset: Offset(0, 1),
             ),
           ],
         ),
@@ -180,39 +234,42 @@ class HomeView extends GetView<HomeController> {
               child: phone.photoUrl != null
                   ? CachedNetworkImage(
                       imageUrl: phone.photoUrl!,
-                      width: 64,
-                      height: 64,
+                      width: 72,
+                      height: 72,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
-                        width: 64,
-                        height: 64,
-                        color: AppColors.backgroundSecondary,
+                        width: 72,
+                        height: 72,
+                        color: AppColors.cardBackground,
                         child: Icon(
-                          Icons.phone_iphone,
-                          color: AppColors.textTertiary,
+                          Icons.phone_iphone_rounded,
+                          color: AppColors.textPlaceholder,
+                          size: 32,
                         ),
                       ),
                       errorWidget: (context, url, error) => Container(
-                        width: 64,
-                        height: 64,
-                        color: AppColors.backgroundSecondary,
+                        width: 72,
+                        height: 72,
+                        color: AppColors.cardBackground,
                         child: Icon(
-                          Icons.phone_iphone,
-                          color: AppColors.textTertiary,
+                          Icons.phone_iphone_rounded,
+                          color: AppColors.textPlaceholder,
+                          size: 32,
                         ),
                       ),
                     )
                   : Container(
-                      width: 64,
-                      height: 64,
-                      color: AppColors.backgroundSecondary,
+                      width: 72,
+                      height: 72,
+                      color: AppColors.cardBackground,
                       child: Icon(
-                        Icons.phone_iphone,
-                        color: AppColors.textTertiary,
+                        Icons.phone_iphone_rounded,
+                        color: AppColors.textPlaceholder,
+                        size: 32,
                       ),
                     ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
 
             // Text Info
             Expanded(
@@ -222,9 +279,10 @@ class HomeView extends GetView<HomeController> {
                   Text(
                     '${phone.marqueName} ${phone.modeleName}',
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
+                      letterSpacing: -0.3,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -233,29 +291,48 @@ class HomeView extends GetView<HomeController> {
                   Text(
                     phone.fournisseurName ?? 'Sans fournisseur',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(phone.dateEntree),
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.textSecondary,
-                    ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today_outlined,
+                        size: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        DateFormat('dd/MM/yyyy').format(phone.dateEntree),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
 
-            // Arrow Icon
-            Icon(
-              isRevendu ? Icons.arrow_upward : Icons.arrow_downward,
-              size: 24,
-              color: isRevendu
-                  ? AppColors.outgoingAccent
-                  : AppColors.incomingAccent,
+            // Status Icon
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isRevendu
+                    ? AppColors.successAccent.withOpacity(0.1)
+                    : AppColors.deleteAccent.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                isRevendu ? Icons.arrow_upward : Icons.arrow_downward,
+                size: 20,
+                color: isRevendu
+                    ? AppColors.successAccent
+                    : AppColors.deleteAccent,
+              ),
             ),
           ],
         ),

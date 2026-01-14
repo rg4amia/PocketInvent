@@ -20,7 +20,7 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
               PopupMenuItem(
                 child: Row(
                   children: [
-                    Icon(Icons.sell, color: AppColors.outgoingAccent),
+                    Icon(Icons.sell, color: AppColors.successAccent),
                     const SizedBox(width: 8),
                     Text('Vendre'),
                   ],
@@ -76,9 +76,9 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
               height: 300,
               color: AppColors.backgroundSecondary,
               child: Icon(
-                Icons.phone_iphone,
+                Icons.phone_iphone_rounded,
                 size: 80,
-                color: AppColors.textTertiary,
+                color: AppColors.textPlaceholder,
               ),
             ),
           )
@@ -86,9 +86,9 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
             height: 300,
             color: AppColors.backgroundSecondary,
             child: Icon(
-              Icons.phone_iphone,
+              Icons.phone_iphone_rounded,
               size: 80,
-              color: AppColors.textTertiary,
+              color: AppColors.textPlaceholder,
             ),
           );
   }
@@ -245,15 +245,13 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isVente
-                ? AppColors.outgoingAccent.withOpacity(0.1)
-                : AppColors.incomingAccent.withOpacity(0.1),
+                ? AppColors.successAccent.withOpacity(0.1)
+                : AppColors.deleteAccent.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
             isVente ? Icons.arrow_upward : Icons.arrow_downward,
-            color: isVente
-                ? AppColors.outgoingAccent
-                : AppColors.incomingAccent,
+            color: isVente ? AppColors.successAccent : AppColors.deleteAccent,
             size: 20,
           ),
         ),
@@ -291,7 +289,7 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
                 DateFormat(
                   'dd/MM/yyyy à HH:mm',
                 ).format(transaction.dateTransaction),
-                style: TextStyle(fontSize: 13, color: AppColors.textTertiary),
+                style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -301,9 +299,7 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.bold,
-            color: isVente
-                ? AppColors.outgoingAccent
-                : AppColors.incomingAccent,
+            color: isVente ? AppColors.successAccent : AppColors.deleteAccent,
           ),
         ),
       ],

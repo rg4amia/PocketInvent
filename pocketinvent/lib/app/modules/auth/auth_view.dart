@@ -9,37 +9,68 @@ class AuthView extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundSecondary,
+      backgroundColor: AppColors.backgroundPrimary,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 60),
-              Icon(Icons.phone_iphone, size: 80, color: AppColors.primaryBlue),
-              const SizedBox(height: 16),
-              Text(
-                'PocketInvent',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+              const SizedBox(height: 40),
+              Center(
+                child: Icon(
+                  Icons.phone_iphone_rounded,
+                  size: 60,
+                  color: AppColors.primaryBlue,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Obx(
+                () => Text(
+                  controller.isLogin.value ? 'Connexion' : 'Inscription',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -0.3,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Gérez votre stock de téléphones',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 32),
 
               Obx(
                 () => controller.isLogin.value
                     ? _buildLoginForm()
                     : _buildSignUpForm(),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Divider with "Or"
+              Row(
+                children: [
+                  Expanded(child: Divider(color: AppColors.separator)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Ou',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: AppColors.separator)),
+                ],
               ),
 
               const SizedBox(height: 24),
@@ -53,11 +84,11 @@ class AuthView extends GetView<AuthController> {
               const SizedBox(height: 12),
               _buildSocialButton(
                 'Continuer avec Google',
-                Icons.g_mobiledata,
+                Icons.g_mobiledata_rounded,
                 controller.signInWithGoogle,
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
 
               // Toggle Login/SignUp
               Row(
@@ -67,15 +98,24 @@ class AuthView extends GetView<AuthController> {
                     controller.isLogin.value
                         ? 'Pas encore de compte ? '
                         : 'Déjà un compte ? ',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14,
+                    ),
                   ),
                   TextButton(
                     onPressed: controller.toggleAuthMode,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      minimumSize: Size(0, 0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                     child: Text(
                       controller.isLogin.value ? 'S\'inscrire' : 'Se connecter',
                       style: TextStyle(
                         color: AppColors.primaryBlue,
                         fontWeight: FontWeight.w600,
+                        fontSize: 14,
                       ),
                     ),
                   ),
@@ -92,27 +132,34 @@ class AuthView extends GetView<AuthController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        _buildLabel('Email'),
+        const SizedBox(height: 6),
         TextField(
           controller: controller.emailController,
           keyboardType: TextInputType.emailAddress,
+          style: TextStyle(fontSize: 15),
           decoration: InputDecoration(
-            labelText: 'Email',
-            prefixIcon: Icon(Icons.email_outlined),
+            hintText: 'votre@email.com',
+            prefixIcon: Icon(Icons.email_outlined, size: 20),
           ),
         ),
         const SizedBox(height: 16),
+        _buildLabel('Mot de passe'),
+        const SizedBox(height: 6),
         Obx(
           () => TextField(
             controller: controller.passwordController,
             obscureText: !controller.showPassword.value,
+            style: TextStyle(fontSize: 15),
             decoration: InputDecoration(
-              labelText: 'Mot de passe',
-              prefixIcon: Icon(Icons.lock_outline),
+              hintText: '••••••••',
+              prefixIcon: Icon(Icons.lock_outline, size: 20),
               suffixIcon: IconButton(
                 icon: Icon(
                   controller.showPassword.value
-                      ? Icons.visibility_off
-                      : Icons.visibility,
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  size: 20,
                 ),
                 onPressed: controller.togglePasswordVisibility,
               ),
@@ -124,9 +171,17 @@ class AuthView extends GetView<AuthController> {
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: controller.resetPassword,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              minimumSize: Size(0, 0),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
             child: Text(
               'Mot de passe oublié ?',
-              style: TextStyle(color: AppColors.primaryBlue),
+              style: TextStyle(
+                color: AppColors.primaryBlue,
+                fontSize: 13,
+              ),
             ),
           ),
         ),
@@ -154,27 +209,34 @@ class AuthView extends GetView<AuthController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        _buildLabel('Email'),
+        const SizedBox(height: 6),
         TextField(
           controller: controller.emailController,
           keyboardType: TextInputType.emailAddress,
+          style: TextStyle(fontSize: 15),
           decoration: InputDecoration(
-            labelText: 'Email',
-            prefixIcon: Icon(Icons.email_outlined),
+            hintText: 'votre@email.com',
+            prefixIcon: Icon(Icons.email_outlined, size: 20),
           ),
         ),
         const SizedBox(height: 16),
+        _buildLabel('Mot de passe'),
+        const SizedBox(height: 6),
         Obx(
           () => TextField(
             controller: controller.passwordController,
             obscureText: !controller.showPassword.value,
+            style: TextStyle(fontSize: 15),
             decoration: InputDecoration(
-              labelText: 'Mot de passe',
-              prefixIcon: Icon(Icons.lock_outline),
+              hintText: '••••••••',
+              prefixIcon: Icon(Icons.lock_outline, size: 20),
               suffixIcon: IconButton(
                 icon: Icon(
                   controller.showPassword.value
-                      ? Icons.visibility_off
-                      : Icons.visibility,
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  size: 20,
                 ),
                 onPressed: controller.togglePasswordVisibility,
               ),
@@ -201,6 +263,17 @@ class AuthView extends GetView<AuthController> {
     );
   }
 
+  Widget _buildLabel(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w500,
+        color: AppColors.textPrimary,
+      ),
+    );
+  }
+
   Widget _buildSocialButton(
     String text,
     IconData icon,
@@ -208,12 +281,21 @@ class AuthView extends GetView<AuthController> {
   ) {
     return OutlinedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon, color: AppColors.textPrimary),
-      label: Text(text, style: TextStyle(color: AppColors.textPrimary)),
+      icon: Icon(icon, color: AppColors.textPrimary, size: 24),
+      label: Text(
+        text,
+        style: TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
-        side: BorderSide(color: AppColors.separator),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        side: BorderSide(color: AppColors.border, width: 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }

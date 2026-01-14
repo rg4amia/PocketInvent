@@ -14,14 +14,19 @@ class SplashView extends GetView<SplashController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.phone_iphone, size: 100, color: Colors.white),
+            Icon(
+              Icons.phone_iphone_rounded,
+              size: 100,
+              color: Colors.white,
+            ),
             const SizedBox(height: 24),
             Text(
-              'PocketInvent',
+              'GOSTOCK',
               style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
+                fontSize: 34,
+                fontWeight: FontWeight.w700,
                 color: Colors.white,
+                letterSpacing: -0.3,
               ),
             ),
             const SizedBox(height: 8),
@@ -29,12 +34,18 @@ class SplashView extends GetView<SplashController> {
               'Gestion de stock simplifiée',
               style: TextStyle(
                 fontSize: 16,
+                fontWeight: FontWeight.w400,
                 color: Colors.white.withOpacity(0.9),
               ),
             ),
             const SizedBox(height: 48),
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                strokeWidth: 3,
+              ),
             ),
           ],
         ),
