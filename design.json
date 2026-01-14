@@ -1,164 +1,355 @@
 {
- "designSystemProfile": {
-  "name": "Recent Documents List",
-  "platform": "iOS",
-  "overallStyle": "Clean modern iOS-native design with light color scheme, subtle shadows, rounded corners, pill-shaped segmented control, and card-style list items. Uses system fonts, standard safe areas, and directional color-coded arrows to indicate flow.",
-  "colorPalette": {
-   "primaryBlue": "#007AFF",
-   "incomingAccent": "#FF3B30",
-   "outgoingAccent": "#34C759",
-   "textPrimary": "#000000",
-   "textSecondary": "#8E8E93",
-   "textTertiary": "#AEAEB2",
-   "backgroundPrimary": "#FFFFFF",
-   "backgroundSecondary": "#F2F2F7",
-   "cardBackground": "#FFFFFF",
-   "separator": "#C6C6C8",
-   "shadow": "rgba(0,0,0,0.08)"
-  },
-  "typography": {
-   "systemFont": true,
-   "headerTitle": {
-    "size": 17,
-    "weight": "600",
-    "color": "textPrimary"
-   },
-   "tabLabelSelected": {
-    "size": 13,
-    "weight": "600",
-    "color": "#FFFFFF"
-   },
-   "tabLabelUnselected": {
-    "size": 13,
-    "weight": "600",
-    "color": "primaryBlue"
-   },
-   "itemTitle": {
-    "size": 17,
-    "weight": "600",
-    "color": "textPrimary"
-   },
-   "itemSender": {
-    "size": 15,
-    "weight": "400",
-    "color": "textSecondary"
-   },
-   "itemTime": {
-    "size": 13,
-    "weight": "400",
-    "color": "textSecondary"
-   },
-   "searchPlaceholder": {
-    "size": 15,
-    "weight": "400",
-    "color": "textTertiary"
-   }
-  },
-  "spacing": {
-   "small": 8,
-   "medium": 12,
-   "standard": 16,
-   "large": 20,
-   "section": 24
-  },
-  "cornerRadius": {
-   "card": 12,
-   "image": 8,
-   "tabPill": 20,
-   "searchBar": 10
-  },
-  "shadows": {
-   "cardElevation": {
-    "opacity": 0.08,
-    "radius": 6,
-    "offsetY": 2
-   }
-  },
-  "components": {
-   "navigationBar": {
-    "height": 44,
-    "background": "backgroundPrimary (blurred)",
-    "title": "typography.headerTitle",
-    "leftItem": "standard back chevron",
-    "rightItem": "standard ellipsis menu"
-   },
-   "searchBar": {
-    "height": 36,
-    "cornerRadius": "cornerRadius.searchBar",
-    "background": "backgroundSecondary",
-    "leftIcon": "magnifying glass",
-    "placeholder": "typography.searchPlaceholder",
-    "marginHorizontal": "spacing.standard"
-   },
-   "segmentedTabs": {
-    "type": "pill-shaped segmented control",
-    "height": 32,
-    "cornerRadius": "cornerRadius.tabPill",
-    "segments": [
-     "All",
-     "Incoming",
-     "Outgoing"
-    ],
-    "selectedBackground": "primaryBlue",
-    "unselectedBackground": "backgroundPrimary",
-    "selectedText": "tabLabelSelected",
-    "unselectedText": "tabLabelUnselected",
-    "spacingBetween": 8,
-    "horizontalPadding": "spacing.standard"
-   },
-   "listItemCard": {
-    "height": "~88",
-    "background": "cardBackground",
-    "cornerRadius": "cornerRadius.card",
-    "shadow": "cardElevation",
-    "horizontalPadding": "spacing.standard",
-    "verticalPadding": "spacing.medium",
-    "separator": true,
-    "layout": "HStack with leading image, center text stack, trailing arrow",
-    "image": {
-     "size": "64x64",
-     "cornerRadius": "cornerRadius.image",
-     "aspectFill": true,
-     "marginRight": "spacing.medium"
+  "designSystem": {
+    "metadata": {
+      "name": "GOSTOCK Mobile Inventory App",
+      "platform": "iOS",
+      "deviceType": "iPhone with Dynamic Island",
+      "designLanguage": "Modern minimal with bold accents"
     },
-    "textStack": {
-     "layout": "VStack leading",
-     "spacing": 4,
-     "title": "typography.itemTitle",
-     "sender": "typography.itemSender",
-     "time": "typography.itemTime (aligned leading, below sender)"
+    "colorPalette": {
+      "primary": {
+        "main": "#4D6FFF",
+        "description": "Vibrant blue used for CTAs, active states, and primary actions"
+      },
+      "secondary": {
+        "main": "#FFFFFF",
+        "description": "White for backgrounds and cards"
+      },
+      "text": {
+        "primary": "#000000",
+        "secondary": "#6B7280",
+        "placeholder": "#9CA3AF",
+        "description": "Black for headings, gray tones for secondary text"
+      },
+      "background": {
+        "primary": "#FFFFFF",
+        "secondary": "#F9FAFB",
+        "card": "#F3F4F6",
+        "description": "Clean white with subtle gray variations"
+      },
+      "accent": {
+        "delete": "#EF4444",
+        "edit": "#4D6FFF",
+        "success": "#10B981"
+      }
     },
-    "trailingArrow": {
-     "size": 24,
-     "incoming": {
-      "direction": "down",
-      "color": "incomingAccent"
-     },
-     "outgoing": {
-      "direction": "up",
-      "color": "outgoingAccent"
-     },
-     "marginLeft": "auto"
+    "typography": {
+      "fontFamily": "System San Francisco (iOS Default)",
+      "scale": {
+        "hero": {
+          "size": "32-34px",
+          "weight": "700",
+          "usage": "Splash screen branding"
+        },
+        "h1": {
+          "size": "24-28px",
+          "weight": "700",
+          "usage": "Page titles, main headings"
+        },
+        "h2": {
+          "size": "18-20px",
+          "weight": "600",
+          "usage": "Section headers, item names"
+        },
+        "body": {
+          "size": "14-16px",
+          "weight": "400",
+          "usage": "Regular text, descriptions"
+        },
+        "caption": {
+          "size": "12-13px",
+          "weight": "400",
+          "usage": "Labels, metadata, stock counts"
+        },
+        "price": {
+          "size": "18-20px",
+          "weight": "700",
+          "usage": "Pricing display"
+        }
+      },
+      "lineHeight": "1.4-1.6",
+      "letterSpacing": "Default to -0.3px for headings"
+    },
+    "spacing": {
+      "unit": "4px",
+      "scale": {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "16px",
+        "lg": "24px",
+        "xl": "32px",
+        "xxl": "40px"
+      },
+      "padding": {
+        "screen": "16-20px horizontal",
+        "card": "16px all sides",
+        "input": "12-16px vertical, 16px horizontal"
+      },
+      "gaps": {
+        "form": "16px between form fields",
+        "list": "12px between list items",
+        "sections": "24px between major sections"
+      }
+    },
+    "components": {
+      "buttons": {
+        "primary": {
+          "background": "#4D6FFF",
+          "textColor": "#FFFFFF",
+          "borderRadius": "12px",
+          "height": "48-52px",
+          "fontWeight": "600",
+          "fontSize": "16px",
+          "shadowStyle": "subtle elevation"
+        },
+        "secondary": {
+          "background": "#FFFFFF",
+          "textColor": "#000000",
+          "border": "1px solid #E5E7EB",
+          "borderRadius": "12px",
+          "height": "48-52px"
+        },
+        "icon": {
+          "background": "transparent",
+          "size": "24px",
+          "color": "#6B7280"
+        },
+        "floating": {
+          "background": "#4D6FFF",
+          "size": "56px diameter",
+          "borderRadius": "50%",
+          "position": "fixed bottom right",
+          "shadow": "0 4px 12px rgba(77, 111, 255, 0.3)",
+          "icon": "plus or menu icon centered"
+        }
+      },
+      "inputs": {
+        "text": {
+          "background": "#F3F4F6",
+          "border": "none",
+          "borderRadius": "10-12px",
+          "height": "48-52px",
+          "padding": "16px",
+          "fontSize": "15px",
+          "placeholderColor": "#9CA3AF"
+        },
+        "password": {
+          "extends": "text input",
+          "iconRight": "eye/hide icon for toggle visibility"
+        },
+        "search": {
+          "background": "#F3F4F6",
+          "borderRadius": "10px",
+          "height": "44px",
+          "iconLeft": "magnifying glass",
+          "iconRight": "filter icon (optional)"
+        }
+      },
+      "cards": {
+        "item": {
+          "background": "#FFFFFF",
+          "borderRadius": "12-16px",
+          "padding": "16px",
+          "shadow": "0 1px 3px rgba(0, 0, 0, 0.05)",
+          "layout": "horizontal flex",
+          "imageSize": "64-80px square",
+          "imageRadius": "8px"
+        },
+        "info": {
+          "background": "#F9FAFB",
+          "borderRadius": "12px",
+          "padding": "16px",
+          "border": "1px solid #E5E7EB"
+        }
+      },
+      "navigation": {
+        "tabBar": {
+          "background": "#FFFFFF",
+          "height": "60-70px",
+          "itemCount": "4-5 items",
+          "activeColor": "#4D6FFF",
+          "inactiveColor": "#9CA3AF",
+          "iconSize": "24px",
+          "labelSize": "11px",
+          "shadow": "0 -2px 10px rgba(0, 0, 0, 0.05)",
+          "layout": "icons above labels"
+        },
+        "topBar": {
+          "background": "#FFFFFF",
+          "height": "44px below status bar",
+          "backButton": "chevron left icon",
+          "title": "centered or left-aligned",
+          "actions": "right-aligned icons"
+        }
+      },
+      "lists": {
+        "itemList": {
+          "gap": "12px",
+          "cardStyle": "rounded white cards",
+          "layout": "image left, content center, price right",
+          "metadata": "stock count, barcode below title",
+          "actions": "edit/delete icons on swipe or tap"
+        }
+      },
+      "forms": {
+        "layout": "single column",
+        "labelPosition": "above field",
+        "labelStyle": {
+          "fontSize": "13-14px",
+          "fontWeight": "500",
+          "color": "#000000",
+          "marginBottom": "6px"
+        },
+        "fieldSpacing": "16px vertical gap",
+        "submitButton": "full width at bottom"
+      },
+      "charts": {
+        "barChart": {
+          "barColor": "#4D6FFF",
+          "backgroundColor": "#E0E7FF",
+          "borderRadius": "8px on top corners",
+          "spacing": "proportional to container",
+          "labelPosition": "below bars",
+          "valueDisplay": "on hover or above bars"
+        },
+        "gauge": {
+          "style": "semi-circular arc",
+          "color": "#4D6FFF",
+          "backgroundColor": "#E5E7EB",
+          "thickness": "12-16px",
+          "centerValue": "large bold number"
+        }
+      },
+      "images": {
+        "avatar": {
+          "size": "60-80px",
+          "borderRadius": "50%",
+          "border": "2px solid #FFFFFF",
+          "editIcon": "small circle bottom right"
+        },
+        "product": {
+          "aspectRatio": "1:1 square",
+          "borderRadius": "8-12px",
+          "size": "64-80px in lists, larger in detail views",
+          "background": "#F3F4F6 when no image"
+        }
+      },
+      "badges": {
+        "default": {
+          "background": "#F3F4F6",
+          "textColor": "#6B7280",
+          "fontSize": "11-12px",
+          "padding": "4px 8px",
+          "borderRadius": "6px"
+        },
+        "category": {
+          "display": "inline after item name",
+          "style": "subtle gray text in parentheses"
+        }
+      },
+      "dividers": {
+        "color": "#E5E7EB",
+        "thickness": "1px",
+        "spacing": "16-24px vertical margin"
+      }
+    },
+    "layouts": {
+      "splash": {
+        "background": "gradient (#4D6FFF with subtle variation)",
+        "logo": "centered white icon + text",
+        "animation": "fade or scale recommended"
+      },
+      "authentication": {
+        "background": "#FFFFFF",
+        "padding": "24px",
+        "logo": "optional small logo top center",
+        "heading": "bold, left-aligned",
+        "form": "full width inputs",
+        "divider": "text divider 'Or'",
+        "socialButtons": "outlined, full width, stacked",
+        "footer": "small text with link"
+      },
+      "mainContent": {
+        "padding": "16-20px",
+        "header": "sticky top bar with title and actions",
+        "content": "scrollable area",
+        "fab": "floating action button bottom right"
+      },
+      "scanner": {
+        "viewfinder": "centered square with rounded corners",
+        "overlay": "dark transparent background",
+        "guides": "corner brackets only",
+        "modeSelector": "bottom horizontal scroll"
+      },
+      "form": {
+        "padding": "16-20px",
+        "headerSpace": "60px for title and back button",
+        "fieldGroups": "related fields together",
+        "actions": "bottom fixed or inline"
+      }
+    },
+    "interactions": {
+      "transitions": {
+        "duration": "200-300ms",
+        "easing": "ease-out or spring",
+        "pageTransition": "slide from right (iOS standard)"
+      },
+      "feedback": {
+        "tap": "subtle scale (0.95) or opacity (0.7)",
+        "loading": "spinner or skeleton screens",
+        "success": "checkmark or brief message",
+        "error": "red text below field or toast"
+      },
+      "gestures": {
+        "swipe": "horizontal swipe on list items reveals actions",
+        "pullToRefresh": "standard iOS pull gesture",
+        "tap": "single tap for selection",
+        "longPress": "context menu (optional)"
+      }
+    },
+    "iconography": {
+      "style": "Line icons (outlined)",
+      "weight": "1.5-2px stroke",
+      "size": {
+        "small": "16px",
+        "medium": "20-24px",
+        "large": "32px"
+      },
+      "commonIcons": {
+        "navigation": "home, inventory, reports, settings",
+        "actions": "plus, edit, delete, search, filter",
+        "utility": "camera, barcode, chevrons, menu"
+      }
+    },
+    "elevation": {
+      "none": "flat on background",
+      "low": "0 1px 3px rgba(0, 0, 0, 0.05)",
+      "medium": "0 4px 6px rgba(0, 0, 0, 0.07)",
+      "high": "0 10px 15px rgba(0, 0, 0, 0.1)",
+      "floating": "0 4px 12px rgba(77, 111, 255, 0.3)"
+    },
+    "designPrinciples": {
+      "consistency": "Use consistent spacing, corner radius, and color application",
+      "clarity": "High contrast between text and backgrounds, clear visual hierarchy",
+      "efficiency": "Minimize steps, use floating action buttons for primary actions",
+      "feedback": "Provide immediate visual feedback for all interactions",
+      "accessibility": "Maintain minimum 4.5:1 contrast ratio, 44px touch targets",
+      "simplicity": "Clean layouts with generous white space, avoid clutter"
+    },
+    "responsiveness": {
+      "breakpoints": "Single mobile view (375-430px width)",
+      "safeAreas": "Respect iOS safe areas (notch, bottom bar)",
+      "dynamicType": "Support iOS dynamic type sizing",
+      "orientation": "Portrait optimized, landscape optional"
+    },
+    "states": {
+      "default": "Clean, ready for interaction",
+      "hover": "Not applicable on mobile",
+      "active": "Primary color background or border",
+      "disabled": "50% opacity, no pointer events",
+      "loading": "Spinner or skeleton, disabled interaction",
+      "error": "Red accent color, error message below",
+      "empty": "Centered icon + message + action button"
     }
-   },
-   "screenStructure": {
-    "safeArea": "standard iOS with Dynamic Island",
-    "order": [
-     "statusBar (light content)",
-     "navigationBar",
-     "searchBar (below nav with spacing.medium)",
-     "segmentedTabs (below search with spacing.standard)",
-     "scrollableList (fills remaining space)",
-     "bottomTabBar (optional, visible in screenshots)"
-    ]
-   }
-  },
-  "behaviorNotes": [
-   "Tabs filter content: 'All' shows mixed directions, 'Incoming' only down/red arrows, 'Outgoing' only up/green arrows.",
-   "List items are vertically scrollable with thin separators.",
-   "Arrows are color-coded and directional to visually indicate transfer flow.",
-   "Design closely follows iOS Human Interface Guidelines with custom accent colors for direction."
-  ],
-  "replicationGuidelines": "Use SwiftUI List or UICollectionView with custom cells. Apply corner radius and subtle shadow to each card. Use system fonts exclusively. Maintain consistent horizontal padding and vertical text spacing for readability. Image is square with moderate rounding. Text stack is left-aligned with small vertical gaps."
- }
+  }
 }
