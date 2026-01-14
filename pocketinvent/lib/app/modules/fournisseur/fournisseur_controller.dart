@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/models/fournisseur.dart';
 import '../../data/services/fournisseur_service.dart';
+import '../widgets/id_photo_picker.dart';
 
 class FournisseurController extends GetxController {
   final FournisseurService _service = Get.find<FournisseurService>();

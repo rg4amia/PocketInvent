@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/models/client.dart';
 import '../../data/services/client_service.dart';
+import '../widgets/id_photo_picker.dart';
 
 class ClientController extends GetxController {
   final ClientService _service = Get.find<ClientService>();

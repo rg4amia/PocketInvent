@@ -133,33 +133,34 @@ class FournisseurService extends GetxService {
       rethrow;
     }
   }
-}
 
-Future<String> uploadIdPhoto(File file) async {
-  try {
-    if (_userId == null) throw Exception('User not authenticated');
+  Future<String> uploadIdPhoto(File file) async {
+    try {
+      if (_userId == null) throw Exception('User not authenticated');
 
-    final fileName = '${_userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-    final path = '$_userId/$fileName';
+      final fileName =
+          '${_userId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final path = '$_userId/$fileName';
 
-    await _supabase.storage.from('id-photos').upload(path, file);
+      await _supabase.storage.from('id-photos').upload(path, file);
 
-    final url = _supabase.storage.from('id-photos').getPublicUrl(path);
-    return url;
-  } catch (e) {
-    print('[FournisseurService] Error uploading ID photo: $e');
-    rethrow;
+      final url = _supabase.storage.from('id-photos').getPublicUrl(path);
+      return url;
+    } catch (e) {
+      print('[FournisseurService] Error uploading ID photo: $e');
+      rethrow;
+    }
   }
-}
 
-Future<void> deleteIdPhoto(String url) async {
-  try {
-    if (_userId == null) throw Exception('User not authenticated');
+  Future<void> deleteIdPhoto(String url) async {
+    try {
+      if (_userId == null) throw Exception('User not authenticated');
 
-    final path = url.split('/id-photos/').last;
-    await _supabase.storage.from('id-photos').remove([path]);
-  } catch (e) {
-    print('[FournisseurService] Error deleting ID photo: $e');
-    rethrow;
+      final path = url.split('/id-photos/').last;
+      await _supabase.storage.from('id-photos').remove([path]);
+    } catch (e) {
+      print('[FournisseurService] Error deleting ID photo: $e');
+      rethrow;
+    }
   }
 }
