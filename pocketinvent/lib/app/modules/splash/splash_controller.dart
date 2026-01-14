@@ -4,6 +4,8 @@ import '../../routes/app_pages.dart';
 
 class SplashController extends GetxController {
   late final SupabaseService _supabaseService;
+  final hasError = false.obs;
+  final isRetrying = false.obs;
 
   @override
   void onInit() {
@@ -13,16 +15,21 @@ class SplashController extends GetxController {
 
   Future<void> _checkAuth() async {
     try {
+      hasError.value = false;
       print('[SPLASH] Starting auth check...');
 
       // Initialize SupabaseService
       _supabaseService = Get.put(SupabaseService());
       print('[SPLASH] SupabaseService initialized');
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      // Minimum splash duration for smooth UX
+      await Future.delayed(const Duration(milliseconds: 1500));
 
       final user = _supabaseService.currentUser;
       print('[SPLASH] Current user: ${user?.id ?? "null"}');
+
+      // Add a small delay before navigation for smooth transition
+      await Future.delayed(const Duration(milliseconds: 300));
 
       if (user != null) {
         print('[SPLASH] Navigating to HOME');
@@ -34,8 +41,28 @@ class SplashController extends GetxController {
     } catch (e, stackTrace) {
       print('[SPLASH] Error during auth check: $e');
       print('[SPLASH] StackTrace: $stackTrace');
-      // Navigate to auth on error
-      Get.offAllNamed(Routes.AUTH);
+
+      // Show error state instead of immediately navigating
+      hasError.value = true;
+
+      // Auto-retry after 3 seconds if not manually retried
+      Future.delayed(const Duration(seconds: 3), () {
+        if (hasError.value && !isRetrying.value) {
+          retry();
+        }
+      });
     }
+  }
+
+  void retry() {
+    if (isRetrying.value) return;
+
+    isRetrying.value = true;
+    print('[SPLASH] Retrying auth check...');
+
+    Future.delayed(const Duration(milliseconds: 500), () {
+      isRetrying.value = false;
+      _checkAuth();
+    });
   }
 }
