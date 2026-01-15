@@ -267,7 +267,7 @@ class _ImeiCameraScannerState extends State<ImeiCameraScanner> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Colors.black.withOpacity(0.7),
+                      Colors.black.withValues(alpha: 0.7),
                       Colors.transparent,
                     ],
                   ),
@@ -309,7 +309,7 @@ class _ImeiCameraScannerState extends State<ImeiCameraScanner> {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Colors.black.withOpacity(0.8),
+                      Colors.black.withValues(alpha: 0.8),
                       Colors.transparent,
                     ],
                   ),
@@ -370,7 +370,7 @@ class _ImeiCameraScannerState extends State<ImeiCameraScanner> {
                         child: Container(
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -396,7 +396,7 @@ class _ImeiCameraScannerState extends State<ImeiCameraScanner> {
             child: SafeArea(
               child: FloatingActionButton(
                 mini: true,
-                backgroundColor: Colors.black.withOpacity(0.5),
+                backgroundColor: Colors.black.withValues(alpha: 0.5),
                 onPressed: _toggleFlash,
                 child: Icon(
                   _cameraController?.value.flashMode == FlashMode.torch
@@ -431,7 +431,7 @@ class ScannerOverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.black.withOpacity(0.5)
+      ..color = Colors.black.withValues(alpha: 0.5)
       ..style = PaintingStyle.fill;
 
     final scanAreaWidth = size.width * 0.8;
