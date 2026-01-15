@@ -37,6 +37,12 @@ class TransactionController extends GetxController {
   final RxInt currentNavIndex = 2.obs;
   final RxInt transactionBadgeCount = 0.obs;
 
+  // Pagination
+  static const int pageSize = 50;
+  final RxInt currentPage = 0.obs;
+  final RxBool hasMoreData = true.obs;
+  final RxBool isLoadingMore = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -99,25 +105,76 @@ class TransactionController extends GetxController {
   /// Fetch all transactions from Supabase
   ///
   /// Returns transactions sorted by date in descending order (newest first)
+  /// Supports pagination for better performance
   ///
-  /// Requirements: 2.1
-  Future<List<TransactionModel>> _fetchTransactionsFromSupabase() async {
+  /// Requirements: 2.1, 9.2
+  Future<List<TransactionModel>> _fetchTransactionsFromSupabase({
+    int? limit,
+    int? offset,
+  }) async {
     final userId = _supabaseService.userId;
     if (userId == null) {
       throw Exception('User not authenticated');
     }
 
-    final response =
-        await _supabaseService.client.from('historique_transaction').select('''
+    var query =
+        _supabaseService.client.from('historique_transaction').select('''
           *,
           client:client_id(nom),
           fournisseur:fournisseur_id(nom),
           statut_paiement:statut_paiement_id(libelle)
         ''').eq('user_id', userId).order('date_transaction', ascending: false);
 
+    // Apply pagination if specified
+    if (limit != null) {
+      query = query.limit(limit);
+    }
+    if (offset != null) {
+      query = query.range(offset, offset + (limit ?? pageSize) - 1);
+    }
+
+    final response = await query;
+
     return (response as List)
         .map((json) => TransactionModel.fromJson(json))
         .toList();
+  }
+
+  /// Load more transactions (pagination)
+  ///
+  /// Requirements: 9.2
+  Future<void> loadMoreTransactions() async {
+    if (isLoadingMore.value || !hasMoreData.value) return;
+
+    try {
+      isLoadingMore.value = true;
+
+      final nextPage = currentPage.value + 1;
+      final offset = nextPage * pageSize;
+
+      final moreTransactions = await _fetchTransactionsFromSupabase(
+        limit: pageSize,
+        offset: offset,
+      );
+
+      if (moreTransactions.isEmpty || moreTransactions.length < pageSize) {
+        hasMoreData.value = false;
+      }
+
+      if (moreTransactions.isNotEmpty) {
+        allTransactions.addAll(moreTransactions);
+        currentPage.value = nextPage;
+        _applyFilters();
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Erreur',
+        'Impossible de charger plus de transactions: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoadingMore.value = false;
+    }
   }
 
   /// Apply all active filters to the transaction list

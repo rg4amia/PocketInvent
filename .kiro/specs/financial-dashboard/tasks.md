@@ -273,8 +273,8 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - **Property 39: Export Filename Convention**
     - **Validates: Requirements 10.1, 10.2, 10.5**
 
-- [ ] 15. Optimisations et polish
-  - [ ] 15.1 Optimiser les performances
+- [-] 15. Optimisations et polish
+  - [-] 15.1 Optimiser les performances
     - Implémenter la pagination pour les transactions
     - Utiliser des isolates pour les calculs lourds
     - Optimiser les requêtes Supabase avec indexes
