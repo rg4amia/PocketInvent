@@ -140,7 +140,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Tester l'affichage des badges
     - _Requirements: 5.3, 5.4, 5.6_
 
-- [ ] 8. Checkpoint - Valider la navigation et les services
+- [-] 8. Checkpoint - Valider la navigation et les services
   - Vérifier que la navigation fonctionne correctement
   - Tester les workflows de transaction
   - Demander à l'utilisateur si des questions se posent
