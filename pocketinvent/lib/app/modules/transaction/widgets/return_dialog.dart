@@ -218,7 +218,7 @@ class _ReturnDialogState extends State<ReturnDialog> {
                             if (widget.phone.prixVente != null) ...[
                               const SizedBox(height: 4),
                               Text(
-                                'Prix de vente: ${widget.phone.prixVente!.toStringAsFixed(2)} €',
+                                'Prix de vente: ${widget.phone.prixVente!.toStringAsFixed(2)} FCFA',
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: 14,
@@ -271,7 +271,7 @@ class _ReturnDialogState extends State<ReturnDialog> {
 
                       // Refund amount
                       const Text(
-                        'Montant du remboursement (€)',
+                        'Montant du remboursement (FCFA)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -292,7 +292,7 @@ class _ReturnDialogState extends State<ReturnDialog> {
                             horizontal: 12,
                             vertical: 16,
                           ),
-                          suffixText: '€',
+                          suffixText: 'FCFA',
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {

@@ -147,8 +147,9 @@ class PhoneDetailController extends GetxController {
                         TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
                       labelText: 'Prix de vente *',
-                      prefixIcon: Icon(Icons.euro, color: Color(0xFF6B7280)),
-                      suffixText: '€',
+                      prefixIcon:
+                          Icon(Icons.attach_money, color: Color(0xFF6B7280)),
+                      suffixText: 'FCFA',
                       border: InputBorder.none,
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -160,7 +160,7 @@ class TransactionCard extends StatelessWidget {
 
   /// Format amount with 2 decimals and currency symbol
   String _formatAmount(double amount) {
-    return '${amount.toStringAsFixed(2)} €';
+    return '${amount.toStringAsFixed(2)} FCFA';
   }
 
   /// Build phone details section

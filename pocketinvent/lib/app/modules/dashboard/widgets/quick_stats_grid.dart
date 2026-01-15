@@ -212,7 +212,7 @@ class QuickStatsGrid extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '$formattedValue €',
+            '$formattedValue FCFA',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

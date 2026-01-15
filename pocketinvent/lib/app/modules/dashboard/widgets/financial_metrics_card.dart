@@ -11,7 +11,7 @@ import '../../../core/utils/animation_utils.dart';
 /// - Profit Net (net profit) with color based on positive/negative
 /// - Marge Bénéficiaire (profit margin) with color based on positive/negative
 ///
-/// All amounts are formatted with 2 decimal places and the € symbol.
+/// All amounts are formatted with 2 decimal places and the FCFA symbol.
 ///
 /// Requirements: 1.2, 1.3, 1.4, 1.5, 6.8
 class FinancialMetricsCard extends StatelessWidget {
@@ -147,7 +147,7 @@ class FinancialMetricsCard extends StatelessWidget {
             value: value.abs(),
             duration: const Duration(milliseconds: 1000),
             prefix: value < 0 ? '-' : '',
-            suffix: ' €',
+            suffix: ' FCFA',
             decimals: 2,
             style: TextStyle(
               fontSize: 18,

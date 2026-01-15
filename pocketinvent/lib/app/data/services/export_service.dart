@@ -34,7 +34,7 @@ class ExportService extends GetxService {
     rows.add([
       'Date',
       'Type',
-      'Montant (€)',
+      'Montant (FCFA)',
       'IMEI',
       'Partie (Client/Fournisseur)',
       'Statut Paiement',
@@ -207,11 +207,11 @@ class ExportService extends GetxService {
       border: pw.TableBorder.all(),
       children: [
         _buildTableRow('Total Entrées (Achats)',
-            '${metrics.totalEntrees.toStringAsFixed(2)} €'),
+            '${metrics.totalEntrees.toStringAsFixed(2)} FCFA'),
         _buildTableRow('Total Sorties (Ventes)',
-            '${metrics.totalSorties.toStringAsFixed(2)} €'),
+            '${metrics.totalSorties.toStringAsFixed(2)} FCFA'),
         _buildTableRow(
-            'Profit Net', '${metrics.profitNet.toStringAsFixed(2)} €'),
+            'Profit Net', '${metrics.profitNet.toStringAsFixed(2)} FCFA'),
         _buildTableRow('Marge Bénéficiaire',
             '${metrics.margeBeneficiaire.toStringAsFixed(2)} %'),
       ],
@@ -226,8 +226,8 @@ class ExportService extends GetxService {
         _buildTableRow('Téléphones en Stock', '${metrics.nombreEnStock}'),
         _buildTableRow('Téléphones Vendus', '${metrics.nombreVendus}'),
         _buildTableRow('Téléphones Retournés', '${metrics.nombreRetournes}'),
-        _buildTableRow(
-            'Valeur du Stock', '${metrics.valeurStock.toStringAsFixed(2)} €'),
+        _buildTableRow('Valeur du Stock',
+            '${metrics.valeurStock.toStringAsFixed(2)} FCFA'),
       ],
     );
   }
@@ -263,7 +263,7 @@ class ExportService extends GetxService {
               _buildTableCell(_dateFormat.format(transaction.dateTransaction)),
               _buildTableCell(
                   _formatTransactionType(transaction.typeTransaction)),
-              _buildTableCell('${transaction.montant.toStringAsFixed(2)} €'),
+              _buildTableCell('${transaction.montant.toStringAsFixed(2)} FCFA'),
               _buildTableCell(_getPartyName(transaction)),
             ],
           );

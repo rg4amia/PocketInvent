@@ -145,12 +145,12 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
           _buildInfoRow('Capacité', phone.capaciteValue),
           _buildInfoRow(
             'Prix d\'achat',
-            '${phone.prixAchat.toStringAsFixed(2)} €',
+            '${phone.prixAchat.toStringAsFixed(2)} FCFA',
           ),
           if (phone.prixVente != null)
             _buildInfoRow(
               'Prix de vente',
-              '${phone.prixVente!.toStringAsFixed(2)} €',
+              '${phone.prixVente!.toStringAsFixed(2)} FCFA',
             ),
           _buildInfoRow('Fournisseur', phone.fournisseurName ?? 'Non spécifié'),
           _buildInfoRow('Statut', phone.statutPaiementLibelle),
@@ -378,7 +378,7 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
           ),
         ),
         Text(
-          '${transaction.montant.toStringAsFixed(2)} €',
+          '${transaction.montant.toStringAsFixed(2)} FCFA',
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.bold,

@@ -298,7 +298,7 @@ class AddPhoneView extends GetView<AddPhoneController> {
             style: TextStyle(fontSize: 15),
             decoration: InputDecoration(
               hintText: '0.00',
-              suffixText: '€',
+              suffixText: 'FCFA',
               suffixStyle: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 15,
