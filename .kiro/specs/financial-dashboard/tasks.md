@@ -140,25 +140,25 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Tester l'affichage des badges
     - _Requirements: 5.3, 5.4, 5.6_
 
-- [-] 8. Checkpoint - Valider la navigation et les services
+- [x] 8. Checkpoint - Valider la navigation et les services
   - Vérifier que la navigation fonctionne correctement
   - Tester les workflows de transaction
   - Demander à l'utilisateur si des questions se posent
 
-- [ ] 9. Créer les composants du Dashboard
-  - [ ] 9.1 Créer le widget PeriodSelector
+- [-] 9. Créer les composants du Dashboard
+  - [x] 9.1 Créer le widget PeriodSelector
     - Afficher les périodes prédéfinies
     - Implémenter la sélection de période personnalisée
     - Gérer le changement de période
     - _Requirements: 7.1, 7.2, 7.3_
 
-  - [ ] 9.2 Créer le widget FinancialMetricsCard
+  - [x] 9.2 Créer le widget FinancialMetricsCard
     - Afficher les 4 métriques principales (entrées, sorties, profit, marge)
     - Utiliser les couleurs appropriées (vert/rouge)
     - Formater les montants avec 2 décimales et symbole €
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 6.8_
 
-  - [ ] 9.3 Créer le widget QuickStatsGrid
+  - [-] 9.3 Créer le widget QuickStatsGrid
     - Afficher le nombre de téléphones en stock
     - Afficher le nombre de téléphones vendus
     - Afficher le nombre de téléphones retournés
