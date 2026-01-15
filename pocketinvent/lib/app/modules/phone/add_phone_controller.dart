@@ -12,6 +12,7 @@ import '../../data/models/couleur.dart';
 import '../../data/models/capacite.dart';
 import '../../data/models/statut_paiement.dart';
 import '../../data/models/fournisseur.dart';
+import '../phone/widgets/imei_camera_scanner.dart';
 
 class AddPhoneController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
@@ -114,41 +115,144 @@ class AddPhoneController extends GetxController {
     }
   }
 
+  void showScanGuide() {
+    Get.dialog(
+      AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.qr_code_scanner, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Comment scanner l\'IMEI'),
+          ],
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTipWidget(
+                Icons.lightbulb_outline,
+                'Bon éclairage',
+                'Assurez-vous d\'avoir un bon éclairage sans reflets',
+              ),
+              SizedBox(height: 12),
+              _buildTipWidget(
+                Icons.center_focus_strong,
+                'Cadrage',
+                'Centrez l\'IMEI dans le cadre et rapprochez-vous',
+              ),
+              SizedBox(height: 12),
+              _buildTipWidget(
+                Icons.camera_alt,
+                'Stabilité',
+                'Tenez le téléphone stable pour éviter le flou',
+              ),
+              SizedBox(height: 12),
+              _buildTipWidget(
+                Icons.cleaning_services,
+                'Propreté',
+                'Nettoyez l\'objectif et l\'étiquette IMEI',
+              ),
+              SizedBox(height: 16),
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'L\'IMEI est un numéro à 15 chiffres généralement situé sur l\'étiquette du téléphone',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('Annuler'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Get.back();
+              scanImeiWithOcr();
+            },
+            icon: Icon(Icons.camera_alt),
+            label: Text('Scanner'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTipWidget(IconData icon, String title, String description) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: Colors.grey.shade700),
+        SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(
+                description,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> scanImeiWithOcr() async {
     try {
-      final XFile? image = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        preferredCameraDevice: CameraDevice.rear,
+      // Use the new live camera scanner
+      Get.to(
+        () => ImeiCameraScanner(
+          onImeiDetected: (String imei) {
+            imeiController.text = imei;
+            Get.snackbar(
+              'Succès',
+              'IMEI détecté: $imei',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+              duration: Duration(seconds: 3),
+            );
+          },
+        ),
       );
-
-      if (image == null) return;
-
-      isOcrProcessing.value = true;
-
-      final String? extractedImei = await _ocrService.extractImeiFromImage(
-        image.path,
-      );
-
-      if (extractedImei != null && _ocrService.validateImei(extractedImei)) {
-        imeiController.text = extractedImei;
-        Get.snackbar(
-          'Succès',
-          'IMEI extrait: $extractedImei',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-      } else {
-        Get.snackbar(
-          'Erreur',
-          'Impossible d\'extraire l\'IMEI. Veuillez saisir manuellement.',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-      }
     } catch (e) {
-      Get.snackbar('Erreur', 'Échec du scan: ${e.toString()}');
-    } finally {
-      isOcrProcessing.value = false;
+      Get.snackbar(
+        'Erreur',
+        'Échec du scan: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 

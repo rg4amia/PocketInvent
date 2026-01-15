@@ -61,14 +61,24 @@ class AddPhoneView extends GetView<AddPhoneController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'IMEI',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-              letterSpacing: -0.3,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'IMEI',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                  letterSpacing: -0.3,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.help_outline, color: AppColors.primaryBlue),
+                onPressed: controller.showScanGuide,
+                tooltip: 'Aide pour scanner',
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           TextField(
@@ -82,23 +92,10 @@ class AddPhoneView extends GetView<AddPhoneController> {
             ),
           ),
           const SizedBox(height: 12),
-          Obx(
-            () => ElevatedButton.icon(
-              onPressed: controller.isOcrProcessing.value
-                  ? null
-                  : controller.scanImeiWithOcr,
-              icon: controller.isOcrProcessing.value
-                  ? SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : Icon(Icons.camera_alt_outlined, size: 20),
-              label: Text('Scanner IMEI'),
-            ),
+          ElevatedButton.icon(
+            onPressed: controller.scanImeiWithOcr,
+            icon: Icon(Icons.camera_alt_outlined, size: 20),
+            label: Text('Scanner IMEI en direct'),
           ),
         ],
       ),

@@ -23,6 +23,7 @@ dependencies:
   # OCR & Image
   google_mlkit_text_recognition: ^0.15.0
   image_picker: ^1.0.7
+  camera: ^0.11.0+2
 
   # Apple Sign In
   sign_in_with_apple: ^7.0.1
