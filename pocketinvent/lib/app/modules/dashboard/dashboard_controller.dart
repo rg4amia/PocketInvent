@@ -8,7 +8,6 @@ import '../../data/models/period.dart';
 import '../../data/models/telephone_model.dart';
 import '../../data/models/transaction_model.dart';
 import '../../data/services/financial_calculator.dart';
-import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
 import '../../data/services/notification_service.dart';
 import '../../data/services/export_service.dart';
@@ -22,7 +21,6 @@ import '../../routes/app_pages.dart';
 ///
 /// Requirements: 1.1, 1.6, 9.1, 9.4, 9.5
 class DashboardController extends GetxController {
-  final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final StorageService _storageService = Get.find<StorageService>();
   final SyncService _syncService = Get.find<SyncService>();
   final FinancialCalculator _calculator = FinancialCalculator();
