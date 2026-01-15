@@ -38,7 +38,7 @@ class TelephoneModelAdapter extends TypeAdapter<TelephoneModel> {
       photoUrl: fields[18] as String?,
       createdAt: fields[19] as DateTime,
       updatedAt: fields[20] as DateTime,
-      stockStatus: fields[21] as StockStatus,
+      stockStatus: fields[21] as StockStatus? ?? StockStatus.enStock,
     );
   }
 
