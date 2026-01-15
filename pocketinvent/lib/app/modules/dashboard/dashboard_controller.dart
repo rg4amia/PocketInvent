@@ -12,6 +12,7 @@ import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
 import '../../data/services/notification_service.dart';
 import '../../data/services/export_service.dart';
+import '../../data/services/sync_service.dart';
 import '../../routes/app_pages.dart';
 
 /// Controller for the financial dashboard
@@ -23,6 +24,7 @@ import '../../routes/app_pages.dart';
 class DashboardController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final StorageService _storageService = Get.find<StorageService>();
+  final SyncService _syncService = Get.find<SyncService>();
   final FinancialCalculator _calculator = FinancialCalculator();
   final ExportService _exportService = ExportService();
   late final NotificationService _notificationService;
@@ -33,7 +35,11 @@ class DashboardController extends GetxController {
   final RxList<TransactionModel> transactions = <TransactionModel>[].obs;
   final RxList<TelephoneModel> phones = <TelephoneModel>[].obs;
   final RxBool isLoading = false.obs;
-  final RxBool isSyncing = false.obs;
+
+  // Sync status (delegated to SyncService)
+  RxBool get isSyncing => _syncService.isSyncing;
+  RxBool get isOnline => _syncService.isOnline;
+  RxDateTime get lastSyncTime => _syncService.lastSyncTime;
 
   // Navigation
   final RxInt currentNavIndex = 0.obs;
@@ -54,6 +60,12 @@ class DashboardController extends GetxController {
 
     // Update badge count
     _updateBadgeCount();
+
+    // Listen to sync service changes and update data
+    ever(_syncService.lastSyncTime, (_) {
+      _loadCachedData();
+      calculateMetrics();
+    });
   }
 
   /// Update the transaction badge count
@@ -146,52 +158,28 @@ class DashboardController extends GetxController {
   /// Requirements: 9.3, 9.6, 9.7
   Future<void> _syncWithSupabase() async {
     try {
-      isSyncing.value = true;
+      // Use SyncService for synchronization
+      await _syncService.syncAll();
 
-      // Fetch transactions from Supabase
-      final remoteTransactions = await _fetchTransactionsFromSupabase();
-      await _storageService.saveTransactions(remoteTransactions);
-      transactions.value = remoteTransactions;
-
-      // Fetch phones from Supabase
-      final remotePhones = await _supabaseService.getTelephones();
-      await _storageService.saveTelephones(remotePhones);
-      phones.value = remotePhones;
+      // Reload cached data after sync
+      await _loadCachedData();
 
       // Recalculate metrics with fresh data
       calculateMetrics();
     } catch (e) {
       // If sync fails, continue with cached data
       print('Sync failed: $e');
-      Get.snackbar(
-        'Synchronisation',
-        'Impossible de synchroniser. Affichage des données en cache.',
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 2),
-      );
-    } finally {
-      isSyncing.value = false;
+
+      // Only show error if we're online (otherwise it's expected)
+      if (isOnline.value) {
+        Get.snackbar(
+          'Synchronisation',
+          'Impossible de synchroniser. Affichage des données en cache.',
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 2),
+        );
+      }
     }
-  }
-
-  /// Fetch all transactions from Supabase
-  Future<List<TransactionModel>> _fetchTransactionsFromSupabase() async {
-    final userId = _supabaseService.userId;
-    if (userId == null) {
-      throw Exception('User not authenticated');
-    }
-
-    final response =
-        await _supabaseService.client.from('historique_transaction').select('''
-          *,
-          client:client_id(nom),
-          fournisseur:fournisseur_id(nom),
-          statut_paiement:statut_paiement_id(libelle)
-        ''').eq('user_id', userId).order('date_transaction', ascending: false);
-
-    return (response as List)
-        .map((json) => TransactionModel.fromJson(json))
-        .toList();
   }
 
   /// Calculate financial metrics for the selected period

@@ -9,6 +9,7 @@ import 'app/routes/app_pages.dart';
 import 'app/core/theme/app_theme.dart';
 import 'app/data/services/storage_service.dart';
 import 'app/data/services/notification_service.dart';
+import 'app/data/services/sync_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,9 @@ void main() async {
 
   // Initialize NotificationService
   Get.put(NotificationService());
+
+  // Initialize SyncService (after StorageService)
+  Get.put(SyncService());
 
   // Initialize Supabase
   await Supabase.initialize(
