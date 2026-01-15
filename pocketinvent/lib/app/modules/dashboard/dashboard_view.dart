@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dashboard_controller.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/animation_utils.dart';
 import '../widgets/main_nav_bar.dart';
 import '../widgets/skeleton_loader.dart';
 import 'widgets/period_selector.dart';
@@ -113,9 +114,8 @@ class DashboardView extends GetView<DashboardController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Period Selector with fade-in animation
-                AnimatedOpacity(
-                  opacity: 1.0,
-                  duration: const Duration(milliseconds: 300),
+                AnimatedSlideUpFadeIn(
+                  delay: const Duration(milliseconds: 0),
                   child: PeriodSelector(
                     selectedPeriod: controller.selectedPeriod.value,
                     onPeriodChanged: controller.changePeriod,
@@ -124,28 +124,22 @@ class DashboardView extends GetView<DashboardController> {
                 const SizedBox(height: 16),
 
                 // Financial Metrics Card with slide-up animation
-                AnimatedSlide(
-                  offset: Offset.zero,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeOut,
+                AnimatedSlideUpFadeIn(
+                  delay: const Duration(milliseconds: 100),
                   child: FinancialMetricsCard(metrics: metrics),
                 ),
                 const SizedBox(height: 16),
 
                 // Quick Stats Grid with staggered animation
-                AnimatedSlide(
-                  offset: Offset.zero,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeOut,
+                AnimatedSlideUpFadeIn(
+                  delay: const Duration(milliseconds: 200),
                   child: QuickStatsGrid(metrics: metrics),
                 ),
                 const SizedBox(height: 16),
 
                 // Charts Section with delayed animation
-                AnimatedSlide(
-                  offset: Offset.zero,
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.easeOut,
+                AnimatedSlideUpFadeIn(
+                  delay: const Duration(milliseconds: 300),
                   child: ChartsSection(
                     transactions: controller.transactions,
                     phones: controller.phones,
@@ -165,30 +159,6 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  /// Build loading state
-  ///
-  /// Requirements: 1.1, 9.1
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Chargement des données...',
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Build empty state when no data is available
   ///
   /// Requirements: 7.6, 8.7
@@ -199,44 +169,56 @@ class DashboardView extends GetView<DashboardController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.inbox_outlined,
-              size: 80,
-              color: AppColors.textSecondary.withValues(alpha: 0.5),
+            AnimatedSlideUpFadeIn(
+              delay: Duration.zero,
+              child: Icon(
+                Icons.inbox_outlined,
+                size: 80,
+                color: AppColors.textSecondary.withValues(alpha: 0.5),
+              ),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Aucune donnée disponible',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+            AnimatedSlideUpFadeIn(
+              delay: const Duration(milliseconds: 100),
+              child: Text(
+                'Aucune donnée disponible',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            Text(
-              'Commencez par ajouter des téléphones et des transactions pour voir vos statistiques financières.',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textSecondary,
+            AnimatedSlideUpFadeIn(
+              delay: const Duration(milliseconds: 200),
+              child: Text(
+                'Commencez par ajouter des téléphones et des transactions pour voir vos statistiques financières.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () => controller.refresh(),
-              icon: const Icon(Icons.refresh),
-              label: const Text('Actualiser'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            AnimatedSlideUpFadeIn(
+              delay: const Duration(milliseconds: 300),
+              child: ElevatedButton.icon(
+                onPressed: () => controller.refresh(),
+                icon: const Icon(Icons.refresh),
+                label: const Text('Actualiser'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryBlue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),

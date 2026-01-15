@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/financial_metrics.dart';
 import '../../../core/theme/app_colors.dart';
-import 'package:intl/intl.dart';
+import '../../../core/utils/animation_utils.dart';
 
 /// Widget displaying the main financial metrics
 ///
@@ -111,9 +111,6 @@ class FinancialMetricsCard extends StatelessWidget {
     required Color color,
     required IconData icon,
   }) {
-    final formatter = NumberFormat('#,##0.00', 'fr_FR');
-    final formattedValue = formatter.format(value.abs());
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -146,8 +143,12 @@ class FinancialMetricsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            '${value < 0 ? '-' : ''}$formattedValue €',
+          AnimatedCountUp(
+            value: value.abs(),
+            duration: const Duration(milliseconds: 1000),
+            prefix: value < 0 ? '-' : '',
+            suffix: ' €',
+            decimals: 2,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -167,9 +168,6 @@ class FinancialMetricsCard extends StatelessWidget {
     required double percentage,
     required Color color,
   }) {
-    final formatter = NumberFormat('#,##0.00', 'fr_FR');
-    final formattedPercentage = formatter.format(percentage.abs());
-
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -202,8 +200,12 @@ class FinancialMetricsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            '${percentage < 0 ? '-' : ''}$formattedPercentage %',
+          AnimatedCountUp(
+            value: percentage.abs(),
+            duration: const Duration(milliseconds: 1000),
+            prefix: percentage < 0 ? '-' : '',
+            suffix: ' %',
+            decimals: 2,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,

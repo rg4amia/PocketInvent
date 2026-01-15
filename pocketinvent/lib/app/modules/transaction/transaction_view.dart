@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'transaction_controller.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/utils/animation_utils.dart';
 import '../../data/models/period.dart';
 import '../../data/services/storage_service.dart';
 import '../widgets/main_nav_bar.dart';
+import '../widgets/skeleton_loader.dart';
 import 'widgets/transaction_card.dart';
 import 'widgets/transaction_filters.dart';
 
@@ -81,7 +83,7 @@ class TransactionView extends GetView<TransactionController> {
             child: Obx(() {
               if (controller.isLoading.value &&
                   controller.filteredTransactions.isEmpty) {
-                return _buildLoadingState();
+                return _buildSkeletonList();
               }
 
               if (controller.filteredTransactions.isEmpty) {
@@ -134,52 +136,77 @@ class TransactionView extends GetView<TransactionController> {
     );
   }
 
-  /// Build the transaction list with pull-to-refresh
+  /// Build the transaction list with pull-to-refresh and pagination
   ///
   /// Displays transactions sorted by date in descending order
+  /// Supports infinite scroll for loading more transactions
   ///
-  /// Requirements: 2.1
+  /// Requirements: 2.1, 9.2
   Widget _buildTransactionList(StorageService storageService) {
     return RefreshIndicator(
       onRefresh: controller.refresh,
       color: AppColors.primaryBlue,
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: controller.filteredTransactions.length,
-        itemBuilder: (context, index) {
-          final transaction = controller.filteredTransactions[index];
-
-          // Get phone data from storage
-          final phone = storageService.getTelephone(transaction.telephoneId);
-
-          return TransactionCard(
-            transaction: transaction,
-            phone: phone,
-          );
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          // Load more when reaching 80% of scroll
+          if (scrollInfo.metrics.pixels >=
+              scrollInfo.metrics.maxScrollExtent * 0.8) {
+            controller.loadMoreTransactions();
+          }
+          return false;
         },
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: controller.filteredTransactions.length +
+              (controller.hasMoreData.value ? 1 : 0),
+          itemBuilder: (context, index) {
+            // Show loading indicator at the end if there's more data
+            if (index == controller.filteredTransactions.length) {
+              return Obx(() => controller.isLoadingMore.value
+                  ? Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryBlue,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink());
+            }
+
+            final transaction = controller.filteredTransactions[index];
+
+            // Get phone data from storage
+            final phone = storageService.getTelephone(transaction.telephoneId);
+
+            // Add staggered fade-in animation for each item
+            return AnimatedSlideUpFadeIn(
+              delay: Duration(milliseconds: index * 50),
+              duration: const Duration(milliseconds: 400),
+              child: TransactionCard(
+                transaction: transaction,
+                phone: phone,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
-  /// Build loading state
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            color: AppColors.primaryBlue,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Chargement des transactions...',
-            style: TextStyle(
-              fontSize: 16,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
+  /// Build skeleton loading state
+  ///
+  /// Requirements: 1.1, 9.1
+  Widget _buildSkeletonList() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 8,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: const SkeletonListItem(),
+        );
+      },
     );
   }
 
@@ -193,27 +220,36 @@ class TransactionView extends GetView<TransactionController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.receipt_long_rounded,
-              size: 80,
-              color: AppColors.primaryBlue.withValues(alpha: 0.3),
+            AnimatedSlideUpFadeIn(
+              delay: Duration.zero,
+              child: Icon(
+                Icons.receipt_long_rounded,
+                size: 80,
+                color: AppColors.primaryBlue.withValues(alpha: 0.3),
+              ),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Aucune transaction',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+            AnimatedSlideUpFadeIn(
+              delay: const Duration(milliseconds: 100),
+              child: Text(
+                'Aucune transaction',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Aucune transaction ne correspond aux filtres sélectionnés.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.textSecondary,
+            AnimatedSlideUpFadeIn(
+              delay: const Duration(milliseconds: 200),
+              child: Text(
+                'Aucune transaction ne correspond aux filtres sélectionnés.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textSecondary,
+                ),
               ),
             ),
             const SizedBox(height: 24),
@@ -224,19 +260,22 @@ class TransactionView extends GetView<TransactionController> {
 
               if (!hasFilters) return const SizedBox.shrink();
 
-              return ElevatedButton.icon(
-                onPressed: controller.clearFilters,
-                icon: const Icon(Icons.clear_all_rounded),
-                label: const Text('Effacer les filtres'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBlue,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              return AnimatedSlideUpFadeIn(
+                delay: const Duration(milliseconds: 300),
+                child: ElevatedButton.icon(
+                  onPressed: controller.clearFilters,
+                  icon: const Icon(Icons.clear_all_rounded),
+                  label: const Text('Effacer les filtres'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryBlue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
               );
