@@ -165,7 +165,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Afficher la valeur du stock
     - _Requirements: 1.7, 1.8, 1.9, 1.10_
 
-  - [ ] 9.4 Créer le widget ChartsSection
+  - [-] 9.4 Créer le widget ChartsSection
     - Implémenter le graphique en courbe (évolution CA)
     - Implémenter le graphique en barres (entrées vs sorties)
     - Implémenter le graphique circulaire (répartition par marque)
