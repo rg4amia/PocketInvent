@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'phone_detail_controller.dart';
 import '../../core/theme/app_colors.dart';
+import '../../data/models/telephone_model.dart';
 
 class PhoneDetailView extends GetView<PhoneDetailController> {
   const PhoneDetailView({super.key});
@@ -17,19 +18,36 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
         actions: [
           PopupMenuButton(
             itemBuilder: (context) => [
-              PopupMenuItem(
-                child: Row(
-                  children: [
-                    Icon(Icons.sell, color: AppColors.successAccent),
-                    const SizedBox(width: 8),
-                    Text('Vendre'),
-                  ],
+              // Show "Vendre" option for phones that can be sold
+              if (controller.telephone.canBeSold)
+                PopupMenuItem(
+                  child: Row(
+                    children: [
+                      Icon(Icons.sell, color: AppColors.successAccent),
+                      const SizedBox(width: 8),
+                      Text('Vendre'),
+                    ],
+                  ),
+                  onTap: () => Future.delayed(
+                    Duration.zero,
+                    () => controller.showSellDialog(),
+                  ),
                 ),
-                onTap: () => Future.delayed(
-                  Duration.zero,
-                  () => controller.showSellDialog(),
+              // Show "Retour" option for sold phones
+              if (controller.telephone.stockStatus == StockStatus.vendu)
+                PopupMenuItem(
+                  child: Row(
+                    children: [
+                      Icon(Icons.keyboard_return, color: Colors.orange),
+                      const SizedBox(width: 8),
+                      Text('Enregistrer un retour'),
+                    ],
+                  ),
+                  onTap: () => Future.delayed(
+                    Duration.zero,
+                    () => controller.showReturnDialog(),
+                  ),
                 ),
-              ),
               PopupMenuItem(
                 child: Row(
                   children: [
@@ -136,6 +154,7 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
             ),
           _buildInfoRow('Fournisseur', phone.fournisseurName ?? 'Non spécifié'),
           _buildInfoRow('Statut', phone.statutPaiementLibelle),
+          _buildStockStatusRow(phone.stockStatus),
           _buildInfoRow(
             'Date d\'entrée',
             DateFormat('dd/MM/yyyy à HH:mm').format(phone.dateEntree),
@@ -165,6 +184,70 @@ class PhoneDetailView extends GetView<PhoneDetailController> {
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStockStatusRow(StockStatus status) {
+    Color statusColor;
+    String statusText;
+    IconData statusIcon;
+
+    switch (status) {
+      case StockStatus.enStock:
+        statusColor = Colors.green;
+        statusText = 'En stock';
+        statusIcon = Icons.inventory;
+        break;
+      case StockStatus.vendu:
+        statusColor = Colors.red;
+        statusText = 'Vendu';
+        statusIcon = Icons.sell;
+        break;
+      case StockStatus.retourne:
+        statusColor = Colors.orange;
+        statusText = 'Retourné';
+        statusIcon = Icons.keyboard_return;
+        break;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              'Statut stock',
+              style: TextStyle(fontSize: 15, color: AppColors.textSecondary),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(statusIcon, size: 16, color: statusColor),
+                  const SizedBox(width: 4),
+                  Text(
+                    statusText,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: statusColor,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

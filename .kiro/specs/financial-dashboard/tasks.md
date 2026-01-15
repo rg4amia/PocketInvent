@@ -184,8 +184,8 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Tester l'affichage des messages d'erreur
     - _Requirements: 1.1, 1.6, 7.6_
 
-- [ ] 10. Créer les composants des Transactions
-  - [ ] 10.1 Créer le widget TransactionCard
+- [x] 10. Créer les composants des Transactions
+  - [x] 10.1 Créer le widget TransactionCard
     - Afficher le type avec icône et couleur
     - Afficher le montant (vert pour vente, rouge pour achat)
     - Afficher les détails du téléphone (marque, modèle, IMEI)
@@ -193,12 +193,12 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Afficher la date
     - _Requirements: 2.2, 2.3, 2.4, 2.5_
 
-  - [ ] 10.2 Créer le widget TransactionFilters
+  - [x] 10.2 Créer le widget TransactionFilters
     - Implémenter le filtre par type
     - Implémenter le filtre par période
     - _Requirements: 2.6, 2.7_
 
-  - [ ] 10.3 Créer la vue TransactionListView
+  - [x] 10.3 Créer la vue TransactionListView
     - Afficher la liste des transactions triées par date
     - Intégrer les filtres
     - Gérer le scroll infini (pagination)
@@ -209,24 +209,24 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - **Property 20: Transaction Display Completeness**
     - **Validates: Requirements 2.1, 2.2, 2.4, 2.5**
 
-- [ ] 11. Implémenter les dialogues de workflow
-  - [ ] 11.1 Créer le ReturnDialog
+- [x] 11. Implémenter les dialogues de workflow
+  - [x] 11.1 Créer le ReturnDialog
     - Formulaire de saisie du retour
     - Validation des données
     - Appel au TransactionService.createReturn()
     - _Requirements: 3.3, 3.4_
 
-  - [ ] 11.2 Créer le SaleBlockedDialog
+  - [x] 11.2 Créer le SaleBlockedDialog
     - Message d'erreur explicite
     - Bouton pour enregistrer un retour
     - _Requirements: 3.2_
 
-  - [ ] 11.3 Intégrer les dialogues dans les workflows
+  - [x] 11.3 Intégrer les dialogues dans les workflows
     - Afficher SaleBlockedDialog quand vente bloquée
     - Afficher ReturnDialog pour enregistrer un retour
     - _Requirements: 3.1, 3.2, 3.3_
 
-- [ ] 12. Checkpoint - Valider l'interface utilisateur
+- [-] 12. Checkpoint - Valider l'interface utilisateur
   - Tester tous les écrans et workflows
   - Vérifier la cohérence visuelle
   - Demander à l'utilisateur si des questions se posent

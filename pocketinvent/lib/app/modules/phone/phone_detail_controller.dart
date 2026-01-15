@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import '../../data/models/telephone_model.dart';
 import '../../data/models/transaction_model.dart';
 import '../../data/services/supabase_service.dart';
+import '../transaction/widgets/sale_blocked_dialog.dart';
+import '../transaction/widgets/return_dialog.dart';
 
 class PhoneDetailController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
@@ -34,6 +36,21 @@ class PhoneDetailController extends GetxController {
   }
 
   Future<void> showSellDialog() async {
+    // Check if phone can be sold (Requirements: 3.1, 3.2)
+    if (!telephone.canBeSold) {
+      // Show SaleBlockedDialog
+      Get.dialog(
+        SaleBlockedDialog(
+          phone: telephone,
+          onReturnRegistered: () {
+            // Reload phone data and transactions after return is registered
+            loadTransactions();
+          },
+        ),
+      );
+      return;
+    }
+
     try {
       final clients = await _supabaseService.getClients();
       final statutsPaiement = await _supabaseService.getStatutsPaiement();
@@ -324,5 +341,31 @@ class PhoneDetailController extends GetxController {
         );
       }
     }
+  }
+
+  /// Shows the return dialog for registering a return transaction.
+  /// Requirements: 3.3, 3.4
+  Future<void> showReturnDialog() async {
+    // Check if phone is sold
+    if (telephone.stockStatus != StockStatus.vendu) {
+      Get.snackbar(
+        'Erreur',
+        'Ce téléphone n\'est pas marqué comme vendu',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    Get.dialog(
+      ReturnDialog(
+        phone: telephone,
+        onSuccess: () {
+          // Reload phone data and transactions after return is registered
+          loadTransactions();
+        },
+      ),
+    );
   }
 }
