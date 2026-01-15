@@ -231,8 +231,8 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
   - Vérifier la cohérence visuelle
   - Demander à l'utilisateur si des questions se posent
 
-- [-] 13. Implémenter la synchronisation et le cache
-  - [-] 13.1 Configurer Hive pour le cache des métriques
+- [ ] 13. Implémenter la synchronisation et le cache
+  - [ ] 13.1 Configurer Hive pour le cache des métriques
     - Créer les adapters Hive pour les modèles
     - Implémenter le cache des FinancialMetrics
     - Implémenter le cache des Transactions
@@ -255,8 +255,8 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Tester l'affichage des données hors ligne
     - _Requirements: 9.4, 9.5_
 
-- [ ] 14. Implémenter les fonctionnalités d'export
-  - [ ] 14.1 Créer le service ExportService
+- [-] 14. Implémenter les fonctionnalités d'export
+  - [-] 14.1 Créer le service ExportService
     - Implémenter `exportToCSV()`
     - Implémenter `exportToPDF()`
     - Implémenter le nommage des fichiers
