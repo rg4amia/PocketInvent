@@ -145,7 +145,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
   - Tester les workflows de transaction
   - Demander à l'utilisateur si des questions se posent
 
-- [-] 9. Créer les composants du Dashboard
+- [x] 9. Créer les composants du Dashboard
   - [x] 9.1 Créer le widget PeriodSelector
     - Afficher les périodes prédéfinies
     - Implémenter la sélection de période personnalisée
@@ -165,14 +165,14 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Afficher la valeur du stock
     - _Requirements: 1.7, 1.8, 1.9, 1.10_
 
-  - [-] 9.4 Créer le widget ChartsSection
+  - [x] 9.4 Créer le widget ChartsSection
     - Implémenter le graphique en courbe (évolution CA)
     - Implémenter le graphique en barres (entrées vs sorties)
     - Implémenter le graphique circulaire (répartition par marque)
     - Ajouter l'interactivité (tap pour détails)
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.6_
 
-  - [ ] 9.5 Créer la vue DashboardView
+  - [x] 9.5 Créer la vue DashboardView
     - Assembler tous les widgets
     - Gérer les états de chargement
     - Afficher les messages pour périodes vides
