@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'dashboard_controller.dart';
 import '../../core/theme/app_colors.dart';
 import '../widgets/main_nav_bar.dart';
+import '../widgets/skeleton_loader.dart';
 import 'widgets/period_selector.dart';
 import 'widgets/financial_metrics_card.dart';
 import 'widgets/quick_stats_grid.dart';
@@ -94,7 +95,7 @@ class DashboardView extends GetView<DashboardController> {
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.metrics.value == null) {
-          return _buildLoadingState();
+          return const SkeletonDashboard();
         }
 
         final metrics = controller.metrics.value;
@@ -111,25 +112,44 @@ class DashboardView extends GetView<DashboardController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Period Selector
-                PeriodSelector(
-                  selectedPeriod: controller.selectedPeriod.value,
-                  onPeriodChanged: controller.changePeriod,
+                // Period Selector with fade-in animation
+                AnimatedOpacity(
+                  opacity: 1.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: PeriodSelector(
+                    selectedPeriod: controller.selectedPeriod.value,
+                    onPeriodChanged: controller.changePeriod,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
-                // Financial Metrics Card
-                FinancialMetricsCard(metrics: metrics),
+                // Financial Metrics Card with slide-up animation
+                AnimatedSlide(
+                  offset: Offset.zero,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOut,
+                  child: FinancialMetricsCard(metrics: metrics),
+                ),
                 const SizedBox(height: 16),
 
-                // Quick Stats Grid
-                QuickStatsGrid(metrics: metrics),
+                // Quick Stats Grid with staggered animation
+                AnimatedSlide(
+                  offset: Offset.zero,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeOut,
+                  child: QuickStatsGrid(metrics: metrics),
+                ),
                 const SizedBox(height: 16),
 
-                // Charts Section
-                ChartsSection(
-                  transactions: controller.transactions,
-                  phones: controller.phones,
+                // Charts Section with delayed animation
+                AnimatedSlide(
+                  offset: Offset.zero,
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeOut,
+                  child: ChartsSection(
+                    transactions: controller.transactions,
+                    phones: controller.phones,
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
