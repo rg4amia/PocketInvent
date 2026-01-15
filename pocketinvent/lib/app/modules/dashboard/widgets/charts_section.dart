@@ -360,7 +360,7 @@ class ChartsSection extends StatelessWidget {
   /// Calculate revenue by month from transactions
   Map<String, double> _calculateRevenueByMonth() {
     final revenueByMonth = <String, double>{};
-    final dateFormat = DateFormat('MMM yyyy', 'fr_FR');
+    final dateFormat = DateFormat('MMM yyyy', 'fr');
 
     for (final transaction in transactions) {
       if (transaction.typeTransaction.toLowerCase() == 'vente') {
@@ -376,7 +376,7 @@ class ChartsSection extends StatelessWidget {
   /// Calculate income and expenses by month
   Map<String, Map<String, double>> _calculateInOutByMonth() {
     final inOutByMonth = <String, Map<String, double>>{};
-    final dateFormat = DateFormat('MMM yyyy', 'fr_FR');
+    final dateFormat = DateFormat('MMM yyyy', 'fr');
 
     for (final transaction in transactions) {
       final monthKey = dateFormat.format(transaction.dateTransaction);

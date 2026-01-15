@@ -19,8 +19,9 @@ void main() async {
   // Load environment variables
   await dotenv.load(fileName: ".env");
 
-  // Initialize date formatting for all locales used in the app
-  await initializeDateFormatting();
+  // Initialize date formatting for French locale
+  // Note: 'fr_FR' in DateFormat maps to 'fr' locale data
+  await initializeDateFormatting('fr', null);
 
   // Initialize Hive
   await Hive.initFlutter();
