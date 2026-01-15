@@ -332,8 +332,8 @@ class HomeView extends GetView<HomeController> {
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isRevendu
-                    ? AppColors.successAccent.withOpacity(0.1)
-                    : AppColors.deleteAccent.withOpacity(0.1),
+                    ? AppColors.successAccent.withValues(alpha: 0.1)
+                    : AppColors.deleteAccent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
