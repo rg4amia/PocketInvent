@@ -10,6 +10,9 @@ import 'package:pocketinvent/app/data/services/storage_service.dart';
 import 'package:pocketinvent/app/data/services/transaction_service.dart';
 import 'package:pocketinvent/app/data/services/financial_calculator.dart';
 
+// Import FakeViewPadding from flutter_test
+import 'package:flutter_test/flutter_test.dart' show FakeViewPadding;
+
 /// Device Validation Tests
 ///
 /// These tests validate that the UI components work correctly
@@ -451,23 +454,4 @@ void main() {
       });
     });
   });
-}
-
-/// Fake view padding for testing safe area
-class FakeViewPadding implements ViewPadding {
-  const FakeViewPadding({
-    this.left = 0.0,
-    this.top = 0.0,
-    this.right = 0.0,
-    this.bottom = 0.0,
-  });
-
-  @override
-  final double left;
-  @override
-  final double top;
-  @override
-  final double right;
-  @override
-  final double bottom;
 }
