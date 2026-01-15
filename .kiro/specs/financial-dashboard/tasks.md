@@ -298,8 +298,8 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
   - Vérifier les performances
   - Demander à l'utilisateur de valider l'implémentation complète
 
-- [ ] 17. Corriger les bugs identifiés
-  - [ ] 17.1 Corriger le bug RxDateTime dans SyncService et DashboardController
+- [x] 17. Corriger les bugs identifiés
+  - [x] 17.1 Corriger le bug RxDateTime dans SyncService et DashboardController
     - Remplacer `RxDateTime` par `Rx<DateTime>` dans SyncService
     - Remplacer `RxDateTime` par `Rx<DateTime>` dans DashboardController
     - _Requirements: 9.3, 9.7_
