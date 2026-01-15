@@ -70,13 +70,15 @@ class TransactionController extends GetxController {
   ///
   /// This method:
   /// 1. Loads cached transactions first for immediate display
-  /// 2. Syncs with Supabase to get fresh data
+  /// 2. Syncs with Supabase to get fresh data (with pagination)
   /// 3. Applies current filters to the loaded data
   ///
-  /// Requirements: 2.1
+  /// Requirements: 2.1, 9.2
   Future<void> loadTransactions() async {
     try {
       isLoading.value = true;
+      currentPage.value = 0;
+      hasMoreData.value = true;
 
       // Load from cache first
       final cachedTransactions = _storageService.getAllTransactions();
@@ -85,11 +87,19 @@ class TransactionController extends GetxController {
         _applyFilters();
       }
 
-      // Sync with Supabase
-      final remoteTransactions = await _fetchTransactionsFromSupabase();
+      // Sync with Supabase (first page)
+      final remoteTransactions = await _fetchTransactionsFromSupabase(
+        limit: pageSize,
+      );
       await _storageService.saveTransactions(remoteTransactions);
 
       allTransactions.value = remoteTransactions;
+
+      // Check if there's more data
+      if (remoteTransactions.length < pageSize) {
+        hasMoreData.value = false;
+      }
+
       _applyFilters();
     } catch (e) {
       Get.snackbar(
