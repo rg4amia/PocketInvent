@@ -9,6 +9,7 @@ import 'widgets/period_selector.dart';
 import 'widgets/financial_metrics_card.dart';
 import 'widgets/quick_stats_grid.dart';
 import 'widgets/charts_section.dart';
+import 'widgets/sync_indicator.dart';
 
 /// Main dashboard view displaying financial metrics and statistics
 ///
@@ -40,6 +41,11 @@ class DashboardView extends GetView<DashboardController> {
         elevation: 0,
         centerTitle: false,
         actions: [
+          // Sync indicator
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Center(child: SyncIndicator()),
+          ),
           // Export menu button
           PopupMenuButton<String>(
             icon: const Icon(Icons.file_download_outlined),
@@ -74,24 +80,6 @@ class DashboardView extends GetView<DashboardController> {
               ),
             ],
           ),
-          // Sync indicator
-          Obx(() => controller.isSyncing.value
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Center(
-                    child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.primaryBlue,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink()),
         ],
       ),
       body: Obx(() {
@@ -104,51 +92,84 @@ class DashboardView extends GetView<DashboardController> {
           return _buildEmptyState();
         }
 
-        return RefreshIndicator(
-          onRefresh: controller.refresh,
-          color: AppColors.primaryBlue,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Period Selector with fade-in animation
-                AnimatedSlideUpFadeIn(
-                  delay: const Duration(milliseconds: 0),
-                  child: PeriodSelector(
-                    selectedPeriod: controller.selectedPeriod.value,
-                    onPeriodChanged: controller.changePeriod,
+        return Column(
+          children: [
+            // Offline banner
+            if (!controller.isOnline.value)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                color: const Color(0xFFFF9800),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.cloud_off,
+                      size: 16,
+                      color: Color(0xFFFFFFFF),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Mode hors ligne - Affichage des données en cache',
+                      style: TextStyle(
+                        color: Color(0xFFFFFFFF),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            // Main content
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: controller.refresh,
+                color: AppColors.primaryBlue,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Period Selector with fade-in animation
+                      AnimatedSlideUpFadeIn(
+                        delay: const Duration(milliseconds: 0),
+                        child: PeriodSelector(
+                          selectedPeriod: controller.selectedPeriod.value,
+                          onPeriodChanged: controller.changePeriod,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Financial Metrics Card with slide-up animation
+                      AnimatedSlideUpFadeIn(
+                        delay: const Duration(milliseconds: 100),
+                        child: FinancialMetricsCard(metrics: metrics),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Quick Stats Grid with staggered animation
+                      AnimatedSlideUpFadeIn(
+                        delay: const Duration(milliseconds: 200),
+                        child: QuickStatsGrid(metrics: metrics),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Charts Section with delayed animation
+                      AnimatedSlideUpFadeIn(
+                        delay: const Duration(milliseconds: 300),
+                        child: ChartsSection(
+                          transactions: controller.transactions,
+                          phones: controller.phones,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
-
-                // Financial Metrics Card with slide-up animation
-                AnimatedSlideUpFadeIn(
-                  delay: const Duration(milliseconds: 100),
-                  child: FinancialMetricsCard(metrics: metrics),
-                ),
-                const SizedBox(height: 16),
-
-                // Quick Stats Grid with staggered animation
-                AnimatedSlideUpFadeIn(
-                  delay: const Duration(milliseconds: 200),
-                  child: QuickStatsGrid(metrics: metrics),
-                ),
-                const SizedBox(height: 16),
-
-                // Charts Section with delayed animation
-                AnimatedSlideUpFadeIn(
-                  delay: const Duration(milliseconds: 300),
-                  child: ChartsSection(
-                    transactions: controller.transactions,
-                    phones: controller.phones,
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
+              ),
             ),
-          ),
+          ],
         );
       }),
       bottomNavigationBar: Obx(() => MainNavBar(

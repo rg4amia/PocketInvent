@@ -231,20 +231,20 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
   - Vérifier la cohérence visuelle
   - Demander à l'utilisateur si des questions se posent
 
-- [ ] 13. Implémenter la synchronisation et le cache
-  - [ ] 13.1 Configurer Hive pour le cache des métriques
+- [x] 13. Implémenter la synchronisation et le cache
+  - [x] 13.1 Configurer Hive pour le cache des métriques
     - Créer les adapters Hive pour les modèles
     - Implémenter le cache des FinancialMetrics
     - Implémenter le cache des Transactions
     - _Requirements: 9.4_
 
-  - [ ] 13.2 Implémenter la synchronisation Supabase
+  - [x] 13.2 Implémenter la synchronisation Supabase
     - Écouter les changements en temps réel
     - Mettre à jour le cache local
     - Gérer les conflits de synchronisation
     - _Requirements: 9.3, 9.6_
 
-  - [ ] 13.3 Implémenter le mode hors ligne
+  - [x] 13.3 Implémenter le mode hors ligne
     - Détecter la perte de connexion
     - Afficher les données en cache
     - Afficher l'indicateur de synchronisation
@@ -297,6 +297,12 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
   - Tester tous les workflows de bout en bout
   - Vérifier les performances
   - Demander à l'utilisateur de valider l'implémentation complète
+
+- [ ] 17. Corriger les bugs identifiés
+  - [ ] 17.1 Corriger le bug RxDateTime dans SyncService et DashboardController
+    - Remplacer `RxDateTime` par `Rx<DateTime>` dans SyncService
+    - Remplacer `RxDateTime` par `Rx<DateTime>` dans DashboardController
+    - _Requirements: 9.3, 9.7_
 
 ## Notes
 
