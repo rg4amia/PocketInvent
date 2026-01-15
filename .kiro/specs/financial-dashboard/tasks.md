@@ -255,14 +255,14 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Tester l'affichage des données hors ligne
     - _Requirements: 9.4, 9.5_
 
-- [-] 14. Implémenter les fonctionnalités d'export
+- [x] 14. Implémenter les fonctionnalités d'export
   - [x] 14.1 Créer le service ExportService
     - Implémenter `exportToCSV()`
     - Implémenter `exportToPDF()`
     - Implémenter le nommage des fichiers
     - _Requirements: 10.1, 10.2, 10.3, 10.5_
 
-  - [-] 14.2 Intégrer l'export dans l'UI
+  - [x] 14.2 Intégrer l'export dans l'UI
     - Ajouter les boutons d'export
     - Afficher les notifications de succès
     - Implémenter le partage des fichiers
