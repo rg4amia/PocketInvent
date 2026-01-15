@@ -24,7 +24,7 @@ class SyncService extends GetxService {
   // Observables
   final RxBool isOnline = true.obs;
   final RxBool isSyncing = false.obs;
-  final RxDateTime lastSyncTime = DateTime.now().obs;
+  final Rx<DateTime> lastSyncTime = DateTime.now().obs;
 
   // Realtime subscriptions
   RealtimeChannel? _transactionChannel;
@@ -153,14 +153,10 @@ class SyncService extends GetxService {
       switch (payload.eventType) {
         case PostgresChangeEvent.insert:
         case PostgresChangeEvent.update:
-          if (payload.newRecord != null) {
-            await _syncTransaction(payload.newRecord);
-          }
+          await _syncTransaction(payload.newRecord);
           break;
         case PostgresChangeEvent.delete:
-          if (payload.oldRecord != null) {
-            await _deleteTransaction(payload.oldRecord['id']);
-          }
+          await _deleteTransaction(payload.oldRecord['id']);
           break;
         default:
           break;
@@ -182,14 +178,10 @@ class SyncService extends GetxService {
       switch (payload.eventType) {
         case PostgresChangeEvent.insert:
         case PostgresChangeEvent.update:
-          if (payload.newRecord != null) {
-            await _syncTelephone(payload.newRecord);
-          }
+          await _syncTelephone(payload.newRecord);
           break;
         case PostgresChangeEvent.delete:
-          if (payload.oldRecord != null) {
-            await _deleteTelephone(payload.oldRecord['id']);
-          }
+          await _deleteTelephone(payload.oldRecord['id']);
           break;
         default:
           break;

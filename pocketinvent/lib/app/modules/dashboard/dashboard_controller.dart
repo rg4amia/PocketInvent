@@ -39,7 +39,7 @@ class DashboardController extends GetxController {
   // Sync status (delegated to SyncService)
   RxBool get isSyncing => _syncService.isSyncing;
   RxBool get isOnline => _syncService.isOnline;
-  RxDateTime get lastSyncTime => _syncService.lastSyncTime;
+  Rx<DateTime> get lastSyncTime => _syncService.lastSyncTime;
 
   // Navigation
   final RxInt currentNavIndex = 0.obs;
