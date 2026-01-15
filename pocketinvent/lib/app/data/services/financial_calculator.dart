@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import '../models/financial_metrics.dart';
 import '../models/period.dart';
 import '../models/telephone_model.dart';
@@ -10,7 +11,70 @@ class FinancialCalculator {
   /// Takes a list of transactions, phones, and a period, and returns
   /// comprehensive financial metrics including revenues, expenses, profit,
   /// margin, and stock statistics.
-  FinancialMetrics calculateMetrics({
+  ///
+  /// For large datasets (>100 transactions), calculations are performed
+  /// in a separate isolate to avoid blocking the UI thread.
+  ///
+  /// Requirements: 9.2
+  Future<FinancialMetrics> calculateMetrics({
+    required List<TransactionModel> transactions,
+    required List<TelephoneModel> phones,
+    required Period period,
+  }) async {
+    // For small datasets, calculate directly
+    if (transactions.length <= 100) {
+      return _calculateMetricsSync(
+        transactions: transactions,
+        phones: phones,
+        period: period,
+      );
+    }
+
+    // For large datasets, use isolate
+    return await _calculateMetricsInIsolate(
+      transactions: transactions,
+      phones: phones,
+      period: period,
+    );
+  }
+
+  /// Calculate metrics in a separate isolate for better performance
+  ///
+  /// Requirements: 9.2
+  Future<FinancialMetrics> _calculateMetricsInIsolate({
+    required List<TransactionModel> transactions,
+    required List<TelephoneModel> phones,
+    required Period period,
+  }) async {
+    final receivePort = ReceivePort();
+
+    await Isolate.spawn(
+      _isolateCalculateMetrics,
+      _IsolateData(
+        sendPort: receivePort.sendPort,
+        transactions: transactions,
+        phones: phones,
+        period: period,
+      ),
+    );
+
+    final result = await receivePort.first as FinancialMetrics;
+    return result;
+  }
+
+  /// Isolate entry point for metrics calculation
+  static void _isolateCalculateMetrics(_IsolateData data) {
+    final calculator = FinancialCalculator();
+    final metrics = calculator._calculateMetricsSync(
+      transactions: data.transactions,
+      phones: data.phones,
+      period: data.period,
+    );
+    data.sendPort.send(metrics);
+  }
+
+  /// Synchronous calculation of metrics (used by both direct and isolate methods)
+  FinancialMetrics _calculateMetricsSync({
     required List<TransactionModel> transactions,
     required List<TelephoneModel> phones,
     required Period period,
@@ -117,4 +181,19 @@ class FinancialCalculator {
         .where((t) => t.typeTransaction.toLowerCase() == 'retour')
         .length;
   }
+}
+
+/// Data class for passing data to isolate
+class _IsolateData {
+  final SendPort sendPort;
+  final List<TransactionModel> transactions;
+  final List<TelephoneModel> phones;
+  final Period period;
+
+  _IsolateData({
+    required this.sendPort,
+    required this.transactions,
+    required this.phones,
+    required this.period,
+  });
 }

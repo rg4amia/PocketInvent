@@ -198,11 +198,12 @@ class DashboardController extends GetxController {
   ///
   /// Uses the FinancialCalculator service to compute all metrics
   /// and caches the result in Hive for offline access.
+  /// For large datasets, calculations are performed in a separate isolate.
   ///
-  /// Requirements: 1.6, 9.1, 9.4
-  void calculateMetrics() {
+  /// Requirements: 1.6, 9.1, 9.2, 9.4
+  Future<void> calculateMetrics() async {
     try {
-      final calculatedMetrics = _calculator.calculateMetrics(
+      final calculatedMetrics = await _calculator.calculateMetrics(
         transactions: transactions,
         phones: phones,
         period: selectedPeriod.value,
@@ -211,7 +212,7 @@ class DashboardController extends GetxController {
       metrics.value = calculatedMetrics;
 
       // Cache the calculated metrics
-      _cacheMetrics(calculatedMetrics);
+      await _cacheMetrics(calculatedMetrics);
     } catch (e) {
       print('Failed to calculate metrics: $e');
       Get.snackbar(

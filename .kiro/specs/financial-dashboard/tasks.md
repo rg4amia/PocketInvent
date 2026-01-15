@@ -274,13 +274,13 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - **Validates: Requirements 10.1, 10.2, 10.5**
 
 - [-] 15. Optimisations et polish
-  - [-] 15.1 Optimiser les performances
+  - [x] 15.1 Optimiser les performances
     - Implémenter la pagination pour les transactions
     - Utiliser des isolates pour les calculs lourds
     - Optimiser les requêtes Supabase avec indexes
     - _Requirements: 9.2_
 
-  - [ ] 15.2 Améliorer l'UX
+  - [-] 15.2 Améliorer l'UX
     - Ajouter des animations de transition
     - Implémenter le pull-to-refresh
     - Ajouter des skeleton loaders
