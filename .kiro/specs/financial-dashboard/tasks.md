@@ -226,13 +226,13 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Afficher ReturnDialog pour enregistrer un retour
     - _Requirements: 3.1, 3.2, 3.3_
 
-- [-] 12. Checkpoint - Valider l'interface utilisateur
+- [x] 12. Checkpoint - Valider l'interface utilisateur
   - Tester tous les écrans et workflows
   - Vérifier la cohérence visuelle
   - Demander à l'utilisateur si des questions se posent
 
-- [ ] 13. Implémenter la synchronisation et le cache
-  - [ ] 13.1 Configurer Hive pour le cache des métriques
+- [-] 13. Implémenter la synchronisation et le cache
+  - [-] 13.1 Configurer Hive pour le cache des métriques
     - Créer les adapters Hive pour les modèles
     - Implémenter le cache des FinancialMetrics
     - Implémenter le cache des Transactions

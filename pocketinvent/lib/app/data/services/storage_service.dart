@@ -2,10 +2,13 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/telephone_model.dart';
 import '../models/transaction_model.dart';
+import '../models/financial_metrics.dart';
+import '../models/period.dart';
 
 class StorageService extends GetxService {
   late Box<TelephoneModel> telephoneBox;
   late Box<TransactionModel> transactionBox;
+  late Box<FinancialMetrics> metricsBox;
   late Box userBox;
 
   Future<StorageService> init() async {
@@ -16,10 +19,20 @@ class StorageService extends GetxService {
     if (!Hive.isAdapterRegistered(1)) {
       Hive.registerAdapter(TransactionModelAdapter());
     }
+    if (!Hive.isAdapterRegistered(3)) {
+      Hive.registerAdapter(FinancialMetricsAdapter());
+    }
+    if (!Hive.isAdapterRegistered(4)) {
+      Hive.registerAdapter(PeriodTypeAdapter());
+    }
+    if (!Hive.isAdapterRegistered(5)) {
+      Hive.registerAdapter(PeriodAdapter());
+    }
 
     // Open boxes
     telephoneBox = await Hive.openBox<TelephoneModel>('telephones');
     transactionBox = await Hive.openBox<TransactionModel>('transactions');
+    metricsBox = await Hive.openBox<FinancialMetrics>('financial_metrics');
     userBox = await Hive.openBox('user');
 
     return this;
@@ -71,6 +84,32 @@ class StorageService extends GetxService {
         .toList();
   }
 
+  // FinancialMetrics operations
+  Future<void> saveMetrics(FinancialMetrics metrics) async {
+    await metricsBox.put('current_metrics', metrics);
+  }
+
+  FinancialMetrics? getMetrics() {
+    return metricsBox.get('current_metrics');
+  }
+
+  Future<void> saveMetricsForPeriod(
+      Period period, FinancialMetrics metrics) async {
+    final key =
+        'metrics_${period.type.name}_${period.startDate?.millisecondsSinceEpoch ?? 0}_${period.endDate?.millisecondsSinceEpoch ?? 0}';
+    await metricsBox.put(key, metrics);
+  }
+
+  FinancialMetrics? getMetricsForPeriod(Period period) {
+    final key =
+        'metrics_${period.type.name}_${period.startDate?.millisecondsSinceEpoch ?? 0}_${period.endDate?.millisecondsSinceEpoch ?? 0}';
+    return metricsBox.get(key);
+  }
+
+  Future<void> clearMetricsCache() async {
+    await metricsBox.clear();
+  }
+
   // User data
   Future<void> saveUserData(String key, dynamic value) async {
     await userBox.put(key, value);
@@ -88,6 +127,7 @@ class StorageService extends GetxService {
   Future<void> clearAll() async {
     await telephoneBox.clear();
     await transactionBox.clear();
+    await metricsBox.clear();
     await userBox.clear();
   }
 }
