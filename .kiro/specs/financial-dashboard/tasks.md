@@ -273,7 +273,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - **Property 39: Export Filename Convention**
     - **Validates: Requirements 10.1, 10.2, 10.5**
 
-- [-] 15. Optimisations et polish
+- [x] 15. Optimisations et polish
   - [x] 15.1 Optimiser les performances
     - Implémenter la pagination pour les transactions
     - Utiliser des isolates pour les calculs lourds
@@ -286,7 +286,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Ajouter des skeleton loaders
     - _Requirements: 1.1, 9.1_
 
-  - [-] 15.3 Tester sur différents appareils
+  - [x] 15.3 Tester sur différents appareils
     - Tester sur iPhone (priorité)
     - Tester sur Android
     - Vérifier le responsive design
