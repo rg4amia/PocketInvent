@@ -280,13 +280,13 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Optimiser les requêtes Supabase avec indexes
     - _Requirements: 9.2_
 
-  - [-] 15.2 Améliorer l'UX
+  - [x] 15.2 Améliorer l'UX
     - Ajouter des animations de transition
     - Implémenter le pull-to-refresh
     - Ajouter des skeleton loaders
     - _Requirements: 1.1, 9.1_
 
-  - [ ] 15.3 Tester sur différents appareils
+  - [-] 15.3 Tester sur différents appareils
     - Tester sur iPhone (priorité)
     - Tester sur Android
     - Vérifier le responsive design
