@@ -363,7 +363,7 @@ class ChartsSection extends StatelessWidget {
     final dateFormat = DateFormat('MMM yyyy', 'fr_FR');
 
     for (final transaction in transactions) {
-      if (transaction.type == TransactionType.vente) {
+      if (transaction.typeTransaction.toLowerCase() == 'vente') {
         final monthKey = dateFormat.format(transaction.dateTransaction);
         revenueByMonth[monthKey] =
             (revenueByMonth[monthKey] ?? 0) + transaction.montant;
@@ -385,10 +385,10 @@ class ChartsSection extends StatelessWidget {
         inOutByMonth[monthKey] = {'in': 0.0, 'out': 0.0};
       }
 
-      if (transaction.type == TransactionType.achat) {
+      if (transaction.typeTransaction.toLowerCase() == 'achat') {
         inOutByMonth[monthKey]!['in'] =
             (inOutByMonth[monthKey]!['in'] ?? 0) + transaction.montant;
-      } else if (transaction.type == TransactionType.vente) {
+      } else if (transaction.typeTransaction.toLowerCase() == 'vente') {
         inOutByMonth[monthKey]!['out'] =
             (inOutByMonth[monthKey]!['out'] ?? 0) + transaction.montant;
       }
@@ -403,14 +403,14 @@ class ChartsSection extends StatelessWidget {
 
     // Get sold phone IDs from transactions
     final soldPhoneIds = transactions
-        .where((t) => t.type == TransactionType.vente)
-        .map((t) => t.phoneId)
+        .where((t) => t.typeTransaction.toLowerCase() == 'vente')
+        .map((t) => t.telephoneId)
         .toSet();
 
     // Count by brand
     for (final phone in phones) {
       if (soldPhoneIds.contains(phone.id)) {
-        final brand = phone.marque ?? 'Inconnu';
+        final brand = phone.marqueName;
         salesByBrand[brand] = (salesByBrand[brand] ?? 0) + 1;
       }
     }
