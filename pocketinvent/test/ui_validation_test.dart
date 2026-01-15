@@ -11,6 +11,8 @@ import 'package:pocketinvent/app/data/services/storage_service.dart';
 import 'package:pocketinvent/app/data/services/notification_service.dart';
 import 'package:pocketinvent/app/data/models/financial_metrics.dart';
 import 'package:pocketinvent/app/data/models/period.dart';
+import 'package:pocketinvent/app/data/models/transaction_model.dart';
+import 'package:pocketinvent/app/data/models/telephone_model.dart';
 
 /// UI Validation Tests for Task 12: Checkpoint - Valider l'interface utilisateur
 ///
@@ -75,12 +77,11 @@ void main() {
         );
 
         // Assert - should show loading or empty state
-        expect(
-          find
-              .byType(CircularProgressIndicator)
-              .or(find.text('Aucune donnée disponible')),
-          findsWidgets,
-        );
+        final hasLoading =
+            find.byType(CircularProgressIndicator).evaluate().isNotEmpty;
+        final hasEmpty =
+            find.text('Aucune donnée disponible').evaluate().isNotEmpty;
+        expect(hasLoading || hasEmpty, isTrue);
       });
 
       testWidgets('Dashboard displays metrics when available', (tester) async {
@@ -437,13 +438,13 @@ class _MockSupabaseService extends GetxService implements SupabaseService {
 
 class _MockStorageService extends GetxService implements StorageService {
   @override
-  List getAllTransactions() => [];
+  List<TransactionModel> getAllTransactions() => [];
 
   @override
-  List getAllTelephones() => [];
+  List<TelephoneModel> getAllTelephones() => [];
 
   @override
-  dynamic getTelephone(String id) => null;
+  TelephoneModel? getTelephone(String id) => null;
 
   @override
   dynamic getUserData(String key) => null;
