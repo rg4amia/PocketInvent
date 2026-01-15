@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../data/models/financial_metrics.dart';
 import '../../data/models/period.dart';
 import '../../data/models/telephone_model.dart';
@@ -8,6 +10,7 @@ import '../../data/services/financial_calculator.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
 import '../../data/services/notification_service.dart';
+import '../../data/services/export_service.dart';
 import '../../routes/app_pages.dart';
 
 /// Controller for the financial dashboard
@@ -20,6 +23,7 @@ class DashboardController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final StorageService _storageService = Get.find<StorageService>();
   final FinancialCalculator _calculator = FinancialCalculator();
+  final ExportService _exportService = ExportService();
   late final NotificationService _notificationService;
 
   // Observables
@@ -268,6 +272,129 @@ class DashboardController extends GetxController {
       case 3:
         Get.offNamed(Routes.HUB);
         break;
+    }
+  }
+
+  /// Export transactions to CSV file
+  ///
+  /// Creates a CSV file with all transactions for the selected period
+  /// and shares it via the system share dialog.
+  ///
+  /// Requirements: 10.1, 10.2, 10.4, 10.5, 10.6
+  Future<void> exportToCSV() async {
+    try {
+      // Show loading indicator
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(),
+        ),
+        barrierDismissible: false,
+      );
+
+      // Generate CSV file
+      final File csvFile = await _exportService.exportToCSV(
+        transactions: transactions,
+        period: selectedPeriod.value,
+      );
+
+      // Close loading dialog
+      Get.back();
+
+      // Share the file
+      await Share.shareXFiles(
+        [XFile(csvFile.path)],
+        subject: 'Export PocketInvent - Transactions',
+      );
+
+      // Show success notification
+      Get.snackbar(
+        'Export réussi',
+        'Le fichier CSV a été généré avec succès',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+        backgroundColor: const Color(0xFF4CAF50),
+        colorText: const Color(0xFFFFFFFF),
+      );
+    } catch (e) {
+      // Close loading dialog if still open
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      Get.snackbar(
+        'Erreur',
+        'Impossible d\'exporter les données: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color(0xFFF44336),
+        colorText: const Color(0xFFFFFFFF),
+      );
+    }
+  }
+
+  /// Export financial report to PDF file
+  ///
+  /// Creates a PDF report with financial metrics, statistics, and transaction summary
+  /// for the selected period and shares it via the system share dialog.
+  ///
+  /// Requirements: 10.3, 10.4, 10.5, 10.6
+  Future<void> exportToPDF() async {
+    try {
+      // Validate that metrics are available
+      if (metrics.value == null) {
+        Get.snackbar(
+          'Erreur',
+          'Aucune donnée disponible pour l\'export',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      // Show loading indicator
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(),
+        ),
+        barrierDismissible: false,
+      );
+
+      // Generate PDF file
+      final File pdfFile = await _exportService.exportToPDF(
+        transactions: transactions,
+        metrics: metrics.value!,
+        period: selectedPeriod.value,
+      );
+
+      // Close loading dialog
+      Get.back();
+
+      // Share the file
+      await Share.shareXFiles(
+        [XFile(pdfFile.path)],
+        subject: 'Rapport PocketInvent',
+      );
+
+      // Show success notification
+      Get.snackbar(
+        'Export réussi',
+        'Le rapport PDF a été généré avec succès',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+        backgroundColor: const Color(0xFF4CAF50),
+        colorText: const Color(0xFFFFFFFF),
+      );
+    } catch (e) {
+      // Close loading dialog if still open
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      Get.snackbar(
+        'Erreur',
+        'Impossible de générer le rapport: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color(0xFFF44336),
+        colorText: const Color(0xFFFFFFFF),
+      );
     }
   }
 }

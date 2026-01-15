@@ -38,6 +38,41 @@ class DashboardView extends GetView<DashboardController> {
         elevation: 0,
         centerTitle: false,
         actions: [
+          // Export menu button
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.file_download_outlined),
+            tooltip: 'Exporter',
+            onSelected: (value) {
+              if (value == 'csv') {
+                controller.exportToCSV();
+              } else if (value == 'pdf') {
+                controller.exportToPDF();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'csv',
+                child: Row(
+                  children: [
+                    Icon(Icons.table_chart, size: 20),
+                    SizedBox(width: 12),
+                    Text('Exporter en CSV'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'pdf',
+                child: Row(
+                  children: [
+                    Icon(Icons.picture_as_pdf, size: 20),
+                    SizedBox(width: 12),
+                    Text('Exporter en PDF'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Sync indicator
           Obx(() => controller.isSyncing.value
               ? Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),

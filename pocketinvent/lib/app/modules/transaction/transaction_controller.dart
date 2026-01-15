@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../data/models/period.dart';
 import '../../data/models/transaction_model.dart';
 import '../../data/services/supabase_service.dart';
 import '../../data/services/storage_service.dart';
 import '../../data/services/notification_service.dart';
+import '../../data/services/export_service.dart';
 import '../../routes/app_pages.dart';
 
 /// Controller for the transaction list view
@@ -15,6 +18,7 @@ import '../../routes/app_pages.dart';
 class TransactionController extends GetxController {
   final SupabaseService _supabaseService = Get.find<SupabaseService>();
   final StorageService _storageService = Get.find<StorageService>();
+  final ExportService _exportService = ExportService();
   late final NotificationService _notificationService;
 
   // Observables
@@ -281,6 +285,71 @@ class TransactionController extends GetxController {
       case 3:
         Get.offNamed(Routes.HUB);
         break;
+    }
+  }
+
+  /// Export filtered transactions to CSV file
+  ///
+  /// Creates a CSV file with the currently filtered transactions
+  /// and shares it via the system share dialog.
+  ///
+  /// Requirements: 10.1, 10.2, 10.4, 10.5, 10.6
+  Future<void> exportToCSV() async {
+    try {
+      if (filteredTransactions.isEmpty) {
+        Get.snackbar(
+          'Aucune donnée',
+          'Aucune transaction à exporter',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      // Show loading indicator
+      Get.dialog(
+        const Center(
+          child: CircularProgressIndicator(),
+        ),
+        barrierDismissible: false,
+      );
+
+      // Generate CSV file
+      final File csvFile = await _exportService.exportToCSV(
+        transactions: filteredTransactions,
+        period: selectedPeriod.value,
+      );
+
+      // Close loading dialog
+      Get.back();
+
+      // Share the file
+      await Share.shareXFiles(
+        [XFile(csvFile.path)],
+        subject: 'Export PocketInvent - Transactions',
+      );
+
+      // Show success notification
+      Get.snackbar(
+        'Export réussi',
+        'Le fichier CSV a été généré avec succès',
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+        backgroundColor: const Color(0xFF4CAF50),
+        colorText: const Color(0xFFFFFFFF),
+      );
+    } catch (e) {
+      // Close loading dialog if still open
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      Get.snackbar(
+        'Erreur',
+        'Impossible d\'exporter les données: ${e.toString()}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color(0xFFF44336),
+        colorText: const Color(0xFFFFFFFF),
+      );
     }
   }
 }

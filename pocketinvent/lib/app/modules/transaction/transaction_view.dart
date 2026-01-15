@@ -39,6 +39,12 @@ class TransactionView extends GetView<TransactionController> {
         elevation: 0,
         centerTitle: false,
         actions: [
+          // Export button
+          IconButton(
+            icon: const Icon(Icons.file_download_outlined),
+            onPressed: controller.exportToCSV,
+            tooltip: 'Exporter en CSV',
+          ),
           // Clear filters button
           Obx(() {
             final hasFilters = controller.selectedType.value != null ||
