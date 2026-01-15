@@ -158,7 +158,7 @@ Ce plan d'implémentation détaille les étapes pour ajouter le tableau de bord 
     - Formater les montants avec 2 décimales et symbole €
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 6.8_
 
-  - [-] 9.3 Créer le widget QuickStatsGrid
+  - [x] 9.3 Créer le widget QuickStatsGrid
     - Afficher le nombre de téléphones en stock
     - Afficher le nombre de téléphones vendus
     - Afficher le nombre de téléphones retournés
