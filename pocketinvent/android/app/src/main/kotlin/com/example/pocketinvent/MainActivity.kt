@@ -1,4 +1,4 @@
-package com.example.pocketinvent
+package com.amia.pocketinvent
 
 import io.flutter.embedding.android.FlutterActivity
 
