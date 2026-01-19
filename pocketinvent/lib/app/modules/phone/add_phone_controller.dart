@@ -346,6 +346,7 @@ class AddPhoneController extends GetxController {
         colorText: Colors.white,
       );
     } catch (e) {
+      print('Impossible d\'ajouter le téléphone: ${e.toString()}');
       Get.snackbar(
         'Erreur',
         'Échec de l\'ajout: ${e.toString()}',

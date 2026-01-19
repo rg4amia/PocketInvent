@@ -12,7 +12,10 @@ class StorageService extends GetxService {
   late Box userBox;
 
   Future<StorageService> init() async {
-    // Register adapters
+    // Register adapters - StockStatus must be registered before TelephoneModel
+    if (!Hive.isAdapterRegistered(2)) {
+      Hive.registerAdapter(StockStatusAdapter());
+    }
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(TelephoneModelAdapter());
     }

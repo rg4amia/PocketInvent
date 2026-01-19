@@ -55,6 +55,7 @@ class HomeController extends GetxController {
       telephones.value = remoteTelephones;
       _filterTelephones();
     } catch (e) {
+      print('Impossible de charger les téléphones: ${e.toString()}');
       Get.snackbar(
         'Erreur',
         'Impossible de charger les téléphones: ${e.toString()}',
