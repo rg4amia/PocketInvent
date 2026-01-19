@@ -38,15 +38,26 @@ class SplashView extends GetView<SplashController> {
                         return Transform.scale(
                           scale: value,
                           child: Container(
-                            padding: const EdgeInsets.all(24),
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.15),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.phone_iphone_rounded,
-                              size: 80,
                               color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.asset(
+                                'assets/images/logo.png',
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                         );
@@ -69,7 +80,7 @@ class SplashView extends GetView<SplashController> {
                         );
                       },
                       child: Text(
-                        'GOSTOCK',
+                        'Pocket Invent',
                         style: TextStyle(
                           fontSize: 38,
                           fontWeight: FontWeight.w800,

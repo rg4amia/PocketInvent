@@ -177,17 +177,24 @@ class HubView extends GetView<HubController> {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.3),
-                width: 2,
-              ),
-            ),
-            child: Icon(
-              Icons.phone_iphone_rounded,
               color: Colors.white,
-              size: 28,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 48,
+                height: 48,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           SizedBox(width: 16),
@@ -196,7 +203,7 @@ class HubView extends GetView<HubController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'GOSTOCK',
+                  'Pocket Invent',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
